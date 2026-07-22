@@ -7,13 +7,14 @@ import { gitDiffCommand, gitStatusCommand } from './commands/git.js'
 import { cacheStatsCommand, cacheClearCommand } from './commands/cache.js'
 import { searchCommand, fetchCommand } from './commands/web.js'
 import { installCommand } from './commands/install.js'
+import { initCommand } from './commands/init.js'
 
 const program = new Command()
 
 program
   .name('make-laten')
-  .description('Universal efficiency skill for AI coding agents')
-  .version('0.1.0')
+  .description('Universal efficiency toolkit for AI coding agents')
+  .version('1.0.3')
 
 program
   .command('read')
@@ -76,9 +77,16 @@ program
 
 program
   .command('install')
-  .description('Install make-laten adapters for detected agents')
+  .description('Install make-laten across all detected platforms')
   .option('-u, --uninstall', 'Remove adapters')
   .option('-s, --status', 'Show installation status')
   .action(installCommand)
+
+program
+  .command('init')
+  .description('Interactive setup wizard — detect agents & configure MCP')
+  .option('-a, --all', 'Configure all detected agents (no prompts)')
+  .option('-p, --project', 'Create .mcp.json in current directory only')
+  .action(initCommand)
 
 program.parse()
