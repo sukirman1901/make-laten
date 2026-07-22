@@ -5,6 +5,9 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "make-laten": "dist/cli/index.js"
+  },
   "directories": {
     "doc": "docs"
   },
@@ -14,14 +17,20 @@
     "test:watch": "vitest",
     "prepublishOnly": "npm run build"
   },
-  "keywords": ["ai", "productivity", "skill", "plugin"],
+  "keywords": [
+    "ai",
+    "productivity",
+    "skill",
+    "plugin"
+  ],
   "author": "",
   "license": "ISC",
   "files": [
     "dist"
   ],
   "dependencies": {
-    "better-sqlite3": "^13.0.1"
+    "better-sqlite3": "^13.0.1",
+    "commander": "^15.0.0"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
