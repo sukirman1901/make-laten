@@ -5,6 +5,22 @@ export class GitStatusCompressor implements Compressor {
   async compress(input: unknown): Promise<CompressedResult> {
     const { status } = input as { status: string }
 
+    const statusLines = status.split('\n').filter(Boolean).length
+    const tokens = Math.ceil(status.length / 4)
+
+    if (tokens < 10) {
+      return {
+        content: status,
+        original: status,
+        confidence: 1.0,
+        metadata: {
+          strategy: 'passthrough',
+          totalFiles: statusLines,
+          savings: 0
+        }
+      }
+    }
+
     const files = this.parseStatus(status)
     const grouped = this.groupByStatus(files)
 

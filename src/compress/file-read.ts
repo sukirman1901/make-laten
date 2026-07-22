@@ -8,6 +8,23 @@ export class FileReadCompressor implements Compressor {
   async compress(input: unknown): Promise<CompressedResult> {
     const { content, filePath, language } = input as FileReadInput
 
+    const lines = content.split('\n').length
+    const tokens = Math.ceil(content.length / 4)
+
+    if (tokens < 200) {
+      return {
+        content: content,
+        original: content,
+        confidence: 1.0,
+        metadata: {
+          strategy: 'passthrough',
+          originalLines: lines,
+          compressedLines: lines,
+          savings: 0
+        }
+      }
+    }
+
     const stripped = stripAll(content)
 
     const exports = extractExports(stripped)

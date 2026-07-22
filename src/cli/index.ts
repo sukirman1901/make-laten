@@ -8,6 +8,7 @@ import { cacheStatsCommand, cacheClearCommand } from './commands/cache.js'
 import { searchCommand, fetchCommand } from './commands/web.js'
 import { installCommand } from './commands/install.js'
 import { initCommand } from './commands/init.js'
+import { benchmarkCommand } from './commands/benchmark.js'
 
 const program = new Command()
 
@@ -88,5 +89,10 @@ program
   .option('-a, --all', 'Configure all detected agents (no prompts)')
   .option('-p, --project', 'Create .mcp.json in current directory only')
   .action(initCommand)
+
+program
+  .command('benchmark')
+  .description('Compare raw vs compressed output')
+  .action(benchmarkCommand)
 
 program.parse()
