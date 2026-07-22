@@ -45,7 +45,8 @@
     "url": "https://github.com/make-laten/make-laten.git"
   },
   "files": [
-    "dist"
+    "dist",
+    "skills"
   ],
   "engines": {
     "node": ">=18.0.0"
