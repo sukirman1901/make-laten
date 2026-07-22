@@ -13,7 +13,7 @@ describe('calculateConfidence', () => {
     const original = 'a'.repeat(1000)
     const compressed = 'a'
     const confidence = calculateConfidence(original, compressed)
-    expect(confidence).toBeLessThan(0.5)
+    expect(confidence).toBeLessThanOrEqual(0.5)
   })
 
   it('should penalize if code blocks modified', () => {

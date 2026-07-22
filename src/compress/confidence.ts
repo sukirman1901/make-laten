@@ -1,10 +1,12 @@
 export function calculateConfidence(original: string, compressed: string): number {
+  if (!original.length) return 0
+
   let score = 1.0
 
   // Penalize if too much dropped
   const ratio = compressed.length / original.length
-  if (ratio < 0.05) score -= 0.3
   if (ratio < 0.01) score -= 0.5
+  else if (ratio < 0.05) score -= 0.3
 
   // Penalize if code blocks were modified
   if (codeBlocksModified(original, compressed)) score -= 0.4
