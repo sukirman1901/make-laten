@@ -4,23 +4,19 @@ export async function installCommand(options: { uninstall?: boolean; status?: bo
   const installer = new Installer()
 
   if (options.status) {
-    console.log('Detecting installed agents...\n')
-    const agents = await installer.status()
+    console.log('Detecting platforms...\n')
+    const status = await installer.status()
 
-    if (agents.length === 0) {
-      console.log('No supported agents detected.')
-      return
-    }
-
-    for (const agent of agents) {
-      const status = agent.detected ? '✓ installed' : '○ detected'
-      console.log(`  ${status}  ${agent.name} (${agent.type})${agent.version ? ` v${agent.version}` : ''}`)
+    for (const s of status) {
+      const icon = s.detected ? '✓' : '○'
+      const label = s.detected ? 'detected' : 'not found'
+      console.log(`  ${icon} ${s.name} (${label})`)
     }
     return
   }
 
   if (options.uninstall) {
-    console.log('Uninstalling make-laten adapters...\n')
+    console.log('Uninstalling make-laten from all platforms...\n')
     const { removed } = await installer.uninstall()
 
     if (removed.length === 0) {
@@ -31,28 +27,27 @@ export async function installCommand(options: { uninstall?: boolean; status?: bo
     for (const name of removed) {
       console.log(`  ✓ removed from ${name}`)
     }
+    console.log(`\nDone! Removed from ${removed.length} platform(s).`)
     return
   }
 
-  console.log('Installing make-laten adapters...\n')
+  console.log('Installing make-laten across all platforms...\n')
   const { installed, skipped } = await installer.install()
 
-  if (installed.length === 0 && skipped.length === 0) {
-    console.log('No supported agents detected.')
-    console.log('make-laten CLI works standalone — use commands directly:')
-    console.log('  make-laten read <file>')
-    console.log('  make-laten grep <pattern>')
-    console.log('  make-laten git diff')
-    return
-  }
-
   for (const name of installed) {
-    console.log(`  ✓ ${name} configured`)
+    console.log(`  ✓ ${name}`)
   }
 
   for (const name of skipped) {
-    console.log(`  ○ ${name} skipped (already configured or unavailable)`)
+    console.log(`  ○ ${name} (not detected)`)
   }
 
-  console.log(`\nDone! Configured for ${installed.length} agent(s).`)
+  console.log(`\nDone! Configured for ${installed.length} platform(s).`)
+  console.log('\nAvailable commands (terminal):')
+  console.log('  mread <file>      compressed file read')
+  console.log('  mgrep <pattern>   grouped grep results')
+  console.log('  mdiff             compressed git diff')
+  console.log('  mstatus           git status summary')
+  console.log('  msearch <query>   web search')
+  console.log('  mfetch <url>      web fetch + compress')
 }

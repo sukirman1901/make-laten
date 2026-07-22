@@ -1,6 +1,6 @@
 {
   "name": "make-laten",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Universal efficiency toolkit for AI coding agents — compress, cache, route, and optimize token usage",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -13,7 +13,8 @@
     }
   },
   "bin": {
-    "make-laten": "dist/cli/index.js"
+    "make-laten": "dist/cli/index.js",
+    "make-laten-mcp": "dist/mcp/server.js"
   },
   "directories": {
     "doc": "docs"
@@ -34,19 +35,25 @@
     "claude-code",
     "cursor",
     "codex",
+    "opencode",
+    "windsurf",
+    "cline",
+    "copilot",
+    "mcp",
     "efficiency",
     "cli",
     "tool"
   ],
-  "author": "",
+  "author": "Sukirman",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/make-laten/make-laten.git"
+    "url": "https://github.com/sukirman1901/make-laten.git"
   },
   "files": [
     "dist",
-    "skills"
+    "skills",
+    "shell"
   ],
   "engines": {
     "node": ">=18.0.0"
