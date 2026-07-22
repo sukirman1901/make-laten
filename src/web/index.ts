@@ -1,0 +1,5 @@
+export type { SearchOptions, FetchOptions, SearchResult, FetchResult, SemanticIR, SectionIR, CodeExample, WebBackend, ExtractionSchema } from './types.js'
+export { WebRouter } from './router.js'
+export { extractSemantic } from './extractor.js'
+export { compressWebContent } from './compressor.js'
+export { DuckDuckGoBackend, selectBackend } from './backends/index.js'

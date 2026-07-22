@@ -5,6 +5,7 @@ import { readCommand } from './commands/read.js'
 import { grepCommand } from './commands/grep.js'
 import { gitDiffCommand, gitStatusCommand } from './commands/git.js'
 import { cacheStatsCommand, cacheClearCommand } from './commands/cache.js'
+import { searchCommand, fetchCommand } from './commands/web.js'
 
 const program = new Command()
 
@@ -55,5 +56,21 @@ cacheCmd
   .command('clear')
   .description('Clear cache')
   .action(cacheClearCommand)
+
+program
+  .command('search')
+  .description('Search the web')
+  .argument('<query>', 'Search query')
+  .option('-b, --backend <backend>', 'Search backend')
+  .option('-m, --max <n>', 'Max results', '5')
+  .action(searchCommand)
+
+program
+  .command('fetch')
+  .description('Fetch and compress web content')
+  .argument('<url>', 'URL to fetch')
+  .option('--no-compress', 'Disable compression')
+  .option('--no-extract', 'Disable semantic extraction')
+  .action(fetchCommand)
 
 program.parse()
