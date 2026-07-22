@@ -1,11 +1,49 @@
 import type { Failure } from './types.js'
+import fs from 'fs'
+import path from 'path'
 
 interface FailureRecord extends Failure {
   count: number
 }
 
+const DATA_FILE = path.join(process.env.HOME || '~', '.make-laten', 'failures.json')
+
 export class FailureLearner {
   private failures: Map<string, FailureRecord> = new Map()
+  private persistencePath: string
+  private lastPersist = 0
+
+  constructor(options?: { persistencePath?: string }) {
+    this.persistencePath = options?.persistencePath || DATA_FILE
+    this.loadFromDisk()
+  }
+
+  private loadFromDisk(): void {
+    try {
+      if (fs.existsSync(this.persistencePath)) {
+        const data = JSON.parse(fs.readFileSync(this.persistencePath, 'utf-8'))
+        if (Array.isArray(data.failures)) {
+          for (const f of data.failures) {
+            this.failures.set(`${f.type}:${f.error}`, f)
+          }
+        }
+      }
+    } catch {}
+  }
+
+  private persistToDisk(): void {
+    const now = Date.now()
+    if (now - this.lastPersist < 5000) return // debounce 5s
+    this.lastPersist = now
+
+    try {
+      const dir = path.dirname(this.persistencePath)
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
+      fs.writeFileSync(this.persistencePath, JSON.stringify({
+        failures: Array.from(this.failures.values())
+      }, null, 2))
+    } catch {}
+  }
 
   record(failure: Omit<Failure, 'id' | 'timestamp'>): void {
     const key = `${failure.type}:${failure.error}`
@@ -21,6 +59,7 @@ export class FailureLearner {
         count: 1
       })
     }
+    this.persistToDisk()
   }
 
   getFailures(): Failure[] {

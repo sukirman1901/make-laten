@@ -131,17 +131,17 @@ const TOOLS = [
   // Learn Layer
   {
     name: 'make-laten-patterns',
-    description: 'Get learned patterns from usage',
+    description: 'Get learned patterns from usage (persisted across sessions)',
     inputSchema: { type: 'object', properties: {} }
   },
   {
     name: 'make-laten-failures',
-    description: 'Get failure records and suggestions',
+    description: 'Get failure records and suggestions (persisted across sessions)',
     inputSchema: { type: 'object', properties: {} }
   },
   {
     name: 'make-laten-suggestions',
-    description: 'Get suggestions based on learned patterns',
+    description: 'Get suggestions based on learned patterns and failures',
     inputSchema: {
       type: 'object',
       properties: {
@@ -153,7 +153,7 @@ const TOOLS = [
   // Correct Layer
   {
     name: 'make-laten-correct',
-    description: 'Apply auto-corrections to text',
+    description: 'Apply auto-corrections to text (11 built-in rules + custom rules)',
     inputSchema: {
       type: 'object',
       properties: {
@@ -388,7 +388,7 @@ async function handleLine(line: string) {
       sendResponse(request.id, {
         protocolVersion: '2024-11-05',
         capabilities: { tools: {} },
-        serverInfo: { name: 'make-laten', version: '1.2.0' }
+        serverInfo: { name: 'make-laten', version: '1.3.0' }
       })
     } else if (request.method === 'notifications/initialized') {
       // no response needed
