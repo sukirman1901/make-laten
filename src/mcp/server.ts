@@ -3,6 +3,7 @@
 import { FileReadCompressor } from '../compress/file-read.js'
 import { GrepCompressor } from '../compress/grep.js'
 import { GitDiffCompressor } from '../compress/git-diff.js'
+import { GitStatusCompressor } from '../compress/git-status.js'
 import { exec } from 'child_process'
 import { promisify } from 'util'
 import fs from 'fs/promises'
@@ -12,7 +13,7 @@ const execAsync = promisify(exec)
 const TOOLS = [
   {
     name: 'make-laten-read',
-    description: 'Read and compress a file (60-90% token savings)',
+    description: 'Read and compress a file (65-90% token savings)',
     inputSchema: {
       type: 'object',
       properties: {
@@ -113,9 +114,9 @@ async function handleGitDiff(params: { staged?: boolean }) {
 
 async function handleGitStatus() {
   const { stdout } = await execAsync('git status --porcelain')
-  const lines = stdout.split('\n').filter(Boolean)
-  const files = lines.map(l => ({ status: l[0], path: l.slice(3) }))
-  return { content: [{ type: 'text', text: JSON.stringify({ total: files.length, files }) }] }
+  const compressor = new GitStatusCompressor()
+  const result = await compressor.compress({ status: stdout })
+  return { content: [{ type: 'text', text: JSON.stringify({ compressed: result.content, savings: result.metadata.savings }) }] }
 }
 
 async function handleCacheStats() {
