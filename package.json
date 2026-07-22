@@ -1,10 +1,17 @@
 {
   "name": "make-laten",
-  "version": "0.1.0",
-  "description": "Universal efficiency skill/plugin for AI coding agents",
+  "version": "1.0.0",
+  "description": "Universal efficiency toolkit for AI coding agents — compress, cache, route, and optimize token usage",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "bin": {
     "make-laten": "dist/cli/index.js"
   },
@@ -15,19 +22,34 @@
     "build": "tsup",
     "test": "vitest run",
     "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
     "ai",
-    "productivity",
-    "skill",
-    "plugin"
+    "coding-agent",
+    "token-optimization",
+    "compression",
+    "caching",
+    "claude-code",
+    "cursor",
+    "codex",
+    "efficiency",
+    "cli",
+    "tool"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/make-laten/make-laten.git"
+  },
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "better-sqlite3": "^13.0.1",
     "commander": "^15.0.0"
