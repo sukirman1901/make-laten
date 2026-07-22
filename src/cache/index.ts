@@ -1,10 +1,23 @@
 import type { Database } from '../graph/database.js'
 import { SessionCache, type CacheEntry, type CacheStats } from './l1-session.js'
 import { CrossSessionCache } from './l2-cross.js'
+import { SemanticCache } from './semantic.js'
 
 export interface UnifiedCacheStats {
   l1: CacheStats
   l2: { size: number }
+}
+
+export function createCacheManager(db?: Database) {
+  const session = new SessionCache()
+  const crossSession = db ? new CrossSessionCache(db) : (null as any)
+  const semantic = new SemanticCache()
+
+  return {
+    session,
+    crossSession,
+    semantic
+  }
 }
 
 export function makeLatenCache(db: Database) {
@@ -47,4 +60,5 @@ export function makeLatenCache(db: Database) {
   }
 }
 
+export { SessionCache, CrossSessionCache, SemanticCache }
 export type { CacheEntry, CacheStats }
