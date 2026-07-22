@@ -3,6 +3,7 @@ import type { AgentAdapter, AdapterOutput, AdapterRequest } from './types.js'
 export class ClaudeCodeAdapter implements AgentAdapter {
   name = 'claude-code'
   version = '1.0.0'
+  type = 'hook' as const
 
   format(input: AdapterRequest): AdapterOutput {
     const { content, context } = input

@@ -1,7 +1,11 @@
 import { ClaudeCodeAdapter } from './claude-code.js'
 import { CodexAdapter } from './codex.js'
 import { GeminiCliAdapter } from './gemini-cli.js'
-import type { AgentAdapter } from './types.js'
+import { HookAdapter } from './hook.js'
+import { RulesAdapter } from './rules.js'
+import { Installer } from './installer.js'
+import { AgentDetector } from './detector.js'
+import type { AgentAdapter, AgentInfo, AdapterType } from './types.js'
 
 const adapters = new Map<string, AgentAdapter>()
 
@@ -25,7 +29,28 @@ export function registerAdapter(name: string, adapter: AgentAdapter): void {
   adapters.set(name, adapter)
 }
 
-export type { AgentAdapter, AdapterConfig, AdapterOutput } from './types.js'
+export function createHookAdapter(name: string): HookAdapter {
+  return new HookAdapter(name)
+}
+
+export function createRulesAdapter(name: string): RulesAdapter {
+  return new RulesAdapter(name)
+}
+
+export function createInstaller(): Installer {
+  return new Installer()
+}
+
+export function createDetector(): AgentDetector {
+  return new AgentDetector()
+}
+
+export type { AgentAdapter, AgentInfo, AdapterConfig, AdapterOutput, AdapterType } from './types.js'
+export { AGENT_CONFIGS } from './types.js'
 export { ClaudeCodeAdapter } from './claude-code.js'
 export { CodexAdapter } from './codex.js'
 export { GeminiCliAdapter } from './gemini-cli.js'
+export { HookAdapter } from './hook.js'
+export { RulesAdapter } from './rules.js'
+export { Installer } from './installer.js'
+export { AgentDetector } from './detector.js'

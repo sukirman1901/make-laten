@@ -6,6 +6,7 @@ import { grepCommand } from './commands/grep.js'
 import { gitDiffCommand, gitStatusCommand } from './commands/git.js'
 import { cacheStatsCommand, cacheClearCommand } from './commands/cache.js'
 import { searchCommand, fetchCommand } from './commands/web.js'
+import { installCommand } from './commands/install.js'
 
 const program = new Command()
 
@@ -72,5 +73,12 @@ program
   .option('--no-compress', 'Disable compression')
   .option('--no-extract', 'Disable semantic extraction')
   .action(fetchCommand)
+
+program
+  .command('install')
+  .description('Install make-laten adapters for detected agents')
+  .option('-u, --uninstall', 'Remove adapters')
+  .option('-s, --status', 'Show installation status')
+  .action(installCommand)
 
 program.parse()

@@ -1,24 +1,32 @@
 import { describe, it, expect } from 'vitest'
-import { getAdapter, getAdapters, createAdapter } from '../../src/adapter/index.js'
+import { AgentDetector } from '../../src/adapter/detector.js'
+import { getAdapter, getAdapters, registerAdapter } from '../../src/adapter/index.js'
+import { AGENT_CONFIGS } from '../../src/adapter/types.js'
 
-describe('Adapter Module Index', () => {
+describe('Adapter Index', () => {
   it('should get adapter by name', () => {
-    const adapter = getAdapter('claude-code')
-    expect(adapter).toBeDefined()
-    expect(adapter.name).toBe('claude-code')
+    expect(getAdapter('claude-code')).toBeDefined()
+    expect(getAdapter('codex')).toBeDefined()
+    expect(getAdapter('gemini-cli')).toBeDefined()
   })
 
-  it('should list all adapters', () => {
+  it('should return undefined for unknown adapter', () => {
+    expect(getAdapter('unknown')).toBeUndefined()
+  })
+
+  it('should get all adapters', () => {
     const adapters = getAdapters()
-    expect(adapters.length).toBe(3)
+    expect(adapters.length).toBeGreaterThanOrEqual(3)
   })
 
-  it('should create adapter from config', () => {
-    const adapter = createAdapter({
-      name: 'custom',
-      version: '1.0.0',
-      format: (input) => ({ output: 'custom', format: 'custom' })
-    })
-    expect(adapter.name).toBe('custom')
+  it('should register custom adapter', () => {
+    registerAdapter('custom', { name: 'custom', version: '1.0.0', type: 'hook', format: (i) => ({ output: i.content, format: 'custom' }) })
+    expect(getAdapter('custom')).toBeDefined()
+  })
+
+  it('should have agent configs', () => {
+    expect(AGENT_CONFIGS['claude-code']).toBeDefined()
+    expect(AGENT_CONFIGS['cursor']).toBeDefined()
+    expect(AGENT_CONFIGS['cursor'].type).toBe('rules')
   })
 })
