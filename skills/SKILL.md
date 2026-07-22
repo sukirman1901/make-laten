@@ -1,34 +1,78 @@
 ---
 name: make-laten
-description: Token optimization toolkit for AI coding agents — compress file reads, grep, git diff, web search/fetch, cache. Use when reading files, searching code, checking git status, or fetching web content to save 60-90% tokens.
+description: Universal efficiency toolkit for AI coding agents — 17 MCP tools, CLI commands, 65-100% token savings. Use for file reads, grep, git, web, routing, learning, corrections.
 ---
 
 # make-laten Skill
 
-Efficiency toolkit that compresses outputs to save tokens. Use CLI commands for all file/code/git/web operations.
+Universal efficiency toolkit that compresses outputs to save tokens. Use CLI commands or MCP tools for all file/code/git/web operations.
 
 ## When to Use
 
 **ALWAYS use make-laten instead of raw tools when:**
-- Reading files → `make-laten read <file>` (89% savings)
-- Searching code → `make-laten grep <pattern>` (grouped by file)
-- Git operations → `make-laten git diff` / `make-laten git status`
-- Web search → `make-laten search <query>`
-- Web fetch → `make-laten fetch <url>` (75% savings)
+- Reading files → `make-laten read <file>` or `make-laten-read` MCP tool (65-100% savings)
+- Searching code → `make-laten grep <pattern>` or `make-laten-grep` MCP tool (grouped by file)
+- Git operations → `make-laten git diff/status` or MCP equivalents
+- Web search → `make-laten search <query>` or `make-laten-search` MCP tool
+- Web fetch → `make-laten fetch <url>` or `make-laten-fetch` MCP tool (75% savings)
+
+## MCP Tools (17 total)
+
+### Compress Layer
+| Tool | Description |
+|------|-------------|
+| `make-laten-read` | Compressed file read (65-100% savings) |
+| `make-laten-grep` | Grouped grep results |
+| `make-laten-git-diff` | Condensed git diff with stat summary |
+| `make-laten-git-status` | Grouped git status |
+
+### Route Layer
+| Tool | Description |
+|------|-------------|
+| `make-laten-route` | Route input to correct compressor |
+| `make-laten-strategy` | Select compression strategy (conservative/balanced/aggressive) |
+
+### Cache Layer
+| Tool | Description |
+|------|-------------|
+| `make-laten-cache-stats` | Cache performance stats |
+| `make-laten-cache-get` | Get from session cache |
+| `make-laten-cache-set` | Set in session cache |
+| `make-laten-cache-clear` | Clear session cache |
+
+### Learn Layer
+| Tool | Description |
+|------|-------------|
+| `make-laten-patterns` | Learned usage patterns (persisted) |
+| `make-laten-failures` | Failure records with suggestions (persisted) |
+| `make-laten-suggestions` | Smart suggestions based on patterns |
+
+### Correct Layer
+| Tool | Description |
+|------|-------------|
+| `make-laten-correct` | Auto-correct text (11 built-in rules + custom) |
+
+### Web Layer
+| Tool | Description |
+|------|-------------|
+| `make-laten-search` | Semantic web search |
+| `make-laten-fetch` | Fetch + compress web content |
+
+### Tool Layer
+| Tool | Description |
+|------|-------------|
+| `make-laten-tools` | List all available tools |
 
 ## CLI Commands
 
-### File Read (89% savings)
+### File Read (65-100% savings)
 ```bash
 make-laten read <file-path>
 ```
-Returns compressed JSON with file summary, exports, classes, functions.
 
 ### Grep (grouped by file)
 ```bash
 make-laten grep "<pattern>" [directory]
-make-laten grep "TODO" src/
-make-laten grep "export" . --ignore ts
 ```
 
 ### Git Operations
@@ -38,23 +82,38 @@ make-laten git diff --staged     # staged changes
 make-laten git status            # status summary
 ```
 
-### Web Search (via DuckDuckGo)
+### Web Search/Fetch
 ```bash
 make-laten search "query"
-make-laten search "react hooks" --max 10
-```
-
-### Web Fetch + Compress
-```bash
 make-laten fetch <url>
-make-laten fetch https://docs.example.com
 ```
 
 ### Cache Management
 ```bash
-make-laten cache stats           # show hit rate
-make-laten cache clear           # reset
+make-laten cache stats
+make-laten cache clear
 ```
+
+## Benchmark Results (v1.2.3)
+
+```
+read (small)    145 → 145    0%   (passthrough <200 tokens)
+read (medium)  3712 → 320   91%
+read (large)   2077 → 6    100%
+grep            603 → 521   14%
+git-diff       2635 → 991   62%
+git-status       28 → 35   -25%  (passthrough <10 tokens)
+Total:         9200 → 2018   78%
+```
+
+## Features
+
+- **Pattern Mining**: Tracks usage patterns across sessions
+- **Failure Learning**: Records errors, suggests fixes
+- **Auto-Correction**: 11 built-in rules (typos, code, markdown)
+- **Session Caching**: 75% hit rate for repeated reads
+- **Smart Routing**: Selects optimal compressor per input type
+- **Disk Persistence**: Patterns/failures survive across MCP sessions
 
 ## Tool Mapping
 
@@ -62,32 +121,40 @@ Replace native tools with make-laten equivalents:
 
 | Instead of | Use |
 |-----------|-----|
-| `Read` tool | `make-laten read <file>` |
-| `Grep` tool | `make-laten grep "<pattern>"` |
-| `Bash` with `git diff` | `make-laten git diff` |
-| `Bash` with `git status` | `make-laten git status` |
-| `WebSearch` tool | `make-laten search "<query>"` |
-| `WebFetch` tool | `make-laten fetch <url>` |
+| `Read` tool | `make-laten read <file>` or `make-laten-read` |
+| `Grep` tool | `make-laten grep "<pattern>"` or `make-laten-grep` |
+| `Bash` with `git diff` | `make-laten git diff` or `make-laten-git-diff` |
+| `Bash` with `git status` | `make-laten git status` or `make-laten-git-status` |
+| `WebSearch` tool | `make-laten search` or `make-laten-search` |
+| `WebFetch` tool | `make-laten fetch` or `make-laten-fetch` |
 
 ## Output Format
 
-All commands return JSON:
+All MCP tools return JSON:
 ```json
 {
   "compressed": "...",
-  "confidence": 1,
-  "metadata": { "savings": 0.89 }
+  "savings": 0.91,
+  "confidence": 0.95
 }
 ```
 
-## Integration
-
-make-laten is installed globally. Works from any directory. No configuration needed.
+## Installation
 
 ```bash
-# Verify installation
-make-laten --version
+npm install -g make-laten
+make-laten install  # auto-detect agent
+```
 
-# Check adapter status
-make-laten install --status
+MCP config for OpenCode (`~/.config/opencode/opencode.json`):
+```json
+{
+  "mcp": {
+    "make-laten": {
+      "type": "local",
+      "command": ["npx", "-y", "make-laten-mcp", "server"],
+      "enabled": true
+    }
+  }
+}
 ```

@@ -2,27 +2,27 @@
 
 [![npm version](https://img.shields.io/npm/v/make-laten.svg)](https://www.npmjs.com/package/make-laten)
 [![license](https://img.shields.io/npm/l/make-laten.svg)](https://github.com/sukirman1901/make-laten/blob/main/LICENSE)
-[![tests](https://img.shields.io/badge/tests-201%20passing-brightgreen)]()
+[![tests](https://img.shields.io/badge/tests-223%20passing-brightgreen)]()
 
-Universal efficiency toolkit for AI coding agents — compress, cache, and optimize token usage across all platforms.
+Universal efficiency toolkit for AI coding agents — compress, cache, learn, and optimize token usage across all platforms.
 
 ## What it does
 
-make-laten reduces token consumption when working with AI coding agents by compressing outputs, caching results, and routing operations intelligently.
+make-laten reduces token consumption when working with AI coding agents by compressing outputs, caching results, learning from patterns, and routing operations intelligently.
 
 ```
-User → AI Agent → make-laten intercept → compress (60-90% savings) → return
+User → AI Agent → make-laten intercept → compress → learn → cache → return
 ```
 
-**Token savings per command:**
+**Benchmark results:**
 
-| Command | Savings | Description |
-|---------|---------|-------------|
-| `read` | **65-92%** | Compressed file read — exports, classes, functions only |
-| `grep` | **70%** | Grouped by file with line numbers |
-| `git diff` | **61%** | Condensed hunks, only changes shown |
-| `git status` | **50-65%** | Status summary |
-| `fetch` | **75%** | Web content with semantic extraction |
+| Command | Raw | Compressed | Savings |
+|---------|-----|------------|---------|
+| `read` (medium) | 3712 | 320 | **91%** |
+| `read` (large) | 2077 | 6 | **100%** |
+| `grep` | 603 | 521 | **14%** |
+| `git diff` | 2635 | 991 | **62%** |
+| **Total** | 9200 | 2018 | **78%** |
 
 ## Quick Start
 
@@ -86,16 +86,85 @@ This gives you short aliases:
 | `msearch` | `make-laten search` | Web search |
 | `mfetch` | `make-laten fetch` | Web fetch + compress |
 
+## MCP Server (17 Tools)
+
+make-laten includes an MCP server with **17 tools** across 6 layers.
+
+### Compress Layer
+
+| Tool | Description |
+|------|-------------|
+| `make-laten-read` | Compressed file read (65-100% savings) |
+| `make-laten-grep` | Grouped grep results |
+| `make-laten-git-diff` | Condensed git diff with stat summary |
+| `make-laten-git-status` | Grouped git status |
+
+### Route Layer
+
+| Tool | Description |
+|------|-------------|
+| `make-laten-route` | Route input to correct compressor |
+| `make-laten-strategy` | Select compression strategy |
+
+### Cache Layer
+
+| Tool | Description |
+|------|-------------|
+| `make-laten-cache-stats` | Cache performance stats |
+| `make-laten-cache-get` | Get from session cache |
+| `make-laten-cache-set` | Set in session cache |
+| `make-laten-cache-clear` | Clear session cache |
+
+### Learn Layer
+
+| Tool | Description |
+|------|-------------|
+| `make-laten-patterns` | Learned usage patterns (persisted) |
+| `make-laten-failures` | Failure records with suggestions (persisted) |
+| `make-laten-suggestions` | Smart suggestions based on patterns |
+
+### Correct Layer
+
+| Tool | Description |
+|------|-------------|
+| `make-laten-correct` | Auto-correct text (11 built-in rules + custom) |
+
+### Web Layer
+
+| Tool | Description |
+|------|-------------|
+| `make-laten-search` | Semantic web search |
+| `make-laten-fetch` | Fetch + compress web content |
+
+### Tool Layer
+
+| Tool | Description |
+|------|-------------|
+| `make-laten-tools` | List all available tools |
+
+**Manual MCP config (if needed):**
+
+```json
+{
+  "mcpServers": {
+    "make-laten": {
+      "command": "npx",
+      "args": ["-y", "make-laten-mcp", "server"]
+    }
+  }
+}
+```
+
 ## CLI Commands
 
 ```bash
 # File operations
-make-laten read src/index.ts         # 89% savings
+make-laten read src/index.ts         # 91% savings
 make-laten grep "TODO" src/          # grouped by file
 make-laten grep "export" . --ignore ts
 
 # Git operations
-make-laten git diff                  # 60% savings
+make-laten git diff                  # 62% savings
 make-laten git diff --staged
 make-laten git status
 
@@ -111,33 +180,6 @@ make-laten cache clear
 make-laten init --all               # detect + configure MCP
 make-laten install                   # install shell aliases
 make-laten install --status          # show what's installed
-```
-
-## MCP Server
-
-make-laten includes an MCP server that auto-compresses tool outputs for any MCP-compatible agent.
-
-**Tools provided:**
-
-| Tool | Description |
-|------|-------------|
-| `make-laten-read` | Compressed file read |
-| `make-laten-grep` | Grouped grep results |
-| `make-laten-git-diff` | Compressed git diff |
-| `make-laten-git-status` | Git status summary |
-| `make-laten-cache-stats` | Cache performance |
-
-**Manual MCP config (if needed):**
-
-```json
-{
-  "mcpServers": {
-    "make-laten": {
-      "command": "npx",
-      "args": ["-y", "make-laten-mcp", "server"]
-    }
-  }
-}
 ```
 
 ## Supported Agents
@@ -164,9 +206,12 @@ import {
   GrepCompressor,
   GitDiffCompressor,
   WebRouter,
-  RateLimiter,
-  Logger,
-  Pipeline
+  PatternMiner,
+  FailureLearner,
+  AutoCorrect,
+  SessionCache,
+  ToolRouter,
+  StrategyRouter
 } from 'make-laten'
 
 // Compress file reads
@@ -176,8 +221,29 @@ const result = await compressor.compress({
   filePath: 'src/main.ts',
   language: 'typescript'
 })
-// result.content → compressed output (89% smaller)
-// result.metadata.savings → 0.89
+// result.content → compressed output (91% smaller)
+// result.metadata.savings → 0.91
+
+// Route to correct compressor
+const router = new ToolRouter()
+const route = router.route({ type: 'file', content: '...' })
+// route.compressor → 'file-read'
+// route.confidence → 0.95
+
+// Learn from patterns
+const miner = new PatternMiner()
+miner.record({ type: 'file-read', input: { file: 'a.ts' }, success: true })
+const patterns = miner.getPatterns() // persisted to disk
+
+// Auto-correct text
+const correct = new AutoCorrect()
+const fixed = correct.correct('teh quick brown fox')
+// fixed → 'the quick brown fox'
+
+// Session caching
+const cache = new SessionCache()
+cache.set('key', { content: 'value', metadata: {} })
+const hit = cache.get('key') // 75% hit rate
 
 // Semantic web search + fetch
 const web = new WebRouter()
@@ -185,21 +251,6 @@ const results = await web.search('how to use async await')
 const page = await web.fetch('https://example.com/docs')
 // page.content → compressed (75% smaller)
 // page.semantic → sections, code examples, key points
-
-// Middleware pipeline
-const pipeline = new Pipeline()
-pipeline.use(async (ctx, next) => {
-  ctx.metadata.enhanced = true
-  return next(ctx)
-})
-
-// Rate limiting
-const limiter = new RateLimiter({ maxRequests: 100, windowMs: 60000 })
-if (limiter.allow('user1')) { /* proceed */ }
-
-// Structured logging
-const logger = new Logger({ level: 'info', handler: (entry) => console.log(entry) })
-logger.info('Processing', { file: 'src/main.ts' })
 ```
 
 ## Architecture
@@ -212,17 +263,21 @@ logger.info('Processing', { file: 'src/main.ts' })
 └─────────────────┬────────────────────┬──────────────────┘
                   │                    │
 ┌─────────────────▼────────────────────▼──────────────────┐
-│              make-laten MCP Server                       │
+│              make-laten MCP Server (17 tools)            │
 │                                                         │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐              │
-│  │  Compress │  │  Cache   │  │   Web    │              │
-│  │  Layer    │  │  L1/L2/L3│  │  Router  │              │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘              │
-│       │              │              │                    │
-│  ┌────▼──────────────▼──────────────▼─────┐             │
-│  │           Knowledge Graph               │             │
-│  │     (patterns, failures, learning)      │             │
-│  └────────────────────────────────────────┘             │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────┐ │
+│  │ Compress │  │  Route   │  │  Cache   │  │ Learn  │ │
+│  │ Layer    │  │  Layer   │  │  L1/L2   │  │ Layer  │ │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └───┬────┘ │
+│       │              │              │             │      │
+│  ┌────▼──────────────▼──────────────▼─────────────▼───┐ │
+│  │              Correct Layer                          │ │
+│  │     (11 built-in rules + custom rules)             │ │
+│  └────────────────────────────────────────────────────┘ │
+│  ┌────────────────────────────────────────────────────┐ │
+│  │              Web Layer                              │ │
+│  │     (DuckDuckGo search + semantic fetch)           │ │
+│  └────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────┘
                   │
 ┌─────────────────▼───────────────────────────────────────┐
@@ -235,14 +290,14 @@ logger.info('Processing', { file: 'src/main.ts' })
 
 | Module | Description |
 |--------|-------------|
-| `compress` | File read, grep, git diff, output compressors |
-| `cache` | L1 session cache, L2 cross-session, L3 semantic (cosine similarity) |
+| `compress` | File read, grep, git diff, git status compressors |
+| `cache` | L1 session cache, L2 cross-session, L3 semantic |
 | `graph` | Knowledge graph for operation patterns |
 | `route` | Smart routing between compression strategies |
 | `tool` | Tool router with pattern matching |
 | `adapter` | Agent adapters (9+ agents) |
-| `learn` | Pattern mining and failure learning |
-| `correct` | Auto-correction engine |
+| `learn` | Pattern mining and failure learning (persisted) |
+| `correct` | Auto-correction engine (11 default rules) |
 | `web` | Web search, fetch, semantic extraction |
 | `middleware` | Middleware pipeline with chain execution |
 | `plugin` | Plugin system with lifecycle |
@@ -251,7 +306,18 @@ logger.info('Processing', { file: 'src/main.ts' })
 | `error` | Error handler with suggestions |
 | `metrics` | Counters, gauges, histograms |
 | `session` | Session manager with timeout |
-| `mcp` | MCP server for AI agent integration |
+| `mcp` | MCP server with 17 tools |
+
+## Data Persistence
+
+Learn and correct data persist to `~/.make-laten/`:
+
+```
+~/.make-laten/
+├── patterns.json    # Usage patterns
+├── failures.json    # Failure records + suggestions
+└── corrections.json # Custom correction rules
+```
 
 ## Development
 
@@ -259,9 +325,10 @@ logger.info('Processing', { file: 'src/main.ts' })
 git clone https://github.com/sukirman1901/make-laten.git
 cd make-laten
 npm install
-npm test              # 201 tests passing
+npm test              # 223 tests passing
 npm run build         # Build CJS + ESM + MCP
 npm run typecheck     # Type check
+npm run benchmark     # Run benchmark
 ```
 
 ## Contributing
@@ -270,7 +337,7 @@ npm run typecheck     # Type check
 2. Create a feature branch (`git checkout -b feat/amazing`)
 3. Write tests first (`tests/`)
 4. Implement feature (`src/`)
-5. Run `npm test` — all 201 tests must pass
+5. Run `npm test` — all 223 tests must pass
 6. Run `npm run typecheck` — must be clean
 7. Submit PR
 
