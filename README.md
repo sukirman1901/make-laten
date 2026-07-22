@@ -18,10 +18,10 @@ User → AI Agent → make-laten intercept → compress (60-90% savings) → ret
 
 | Command | Savings | Description |
 |---------|---------|-------------|
-| `read` | **89%** | Compressed file read — exports, classes, functions only |
+| `read` | **65-92%** | Compressed file read — exports, classes, functions only |
 | `grep` | **70%** | Grouped by file with line numbers |
-| `git diff` | **60%** | Condensed hunks, only changes shown |
-| `git status` | **65%** | Status summary |
+| `git diff` | **61%** | Condensed hunks, only changes shown |
+| `git status` | **50-65%** | Status summary |
 | `fetch` | **75%** | Web content with semantic extraction |
 
 ## Quick Start
