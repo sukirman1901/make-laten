@@ -10,8 +10,8 @@ interface AgentInfo {
   name: string
   detected: boolean
   configPath: string
-  mcpConfig: Record<string, any>
   version?: string
+  writeConfig: (configPath: string) => Promise<boolean>
 }
 
 function getHome(): string {
@@ -36,146 +36,122 @@ async function directoryExists(dirPath: string): Promise<boolean> {
   }
 }
 
-const MCP_ENTRY = 'npx -y make-laten-mcp'
+async function readJSON(filePath: string): Promise<Record<string, any>> {
+  try {
+    const raw = await fs.readFile(filePath, 'utf-8')
+    return JSON.parse(raw)
+  } catch {
+    return {}
+  }
+}
+
+async function writeJSON(filePath: string, data: Record<string, any>): Promise<boolean> {
+  try {
+    const dir = path.dirname(filePath)
+    await fs.mkdir(dir, { recursive: true })
+    await fs.writeFile(filePath, JSON.stringify(data, null, 2))
+    return true
+  } catch {
+    return false
+  }
+}
+
+const MCP_CMD = ['npx', '-y', 'make-laten-mcp', 'server']
 
 async function detectAllAgents(): Promise<AgentInfo[]> {
   const home = getHome()
   const agents: AgentInfo[] = []
 
-  // Claude Code
-  const claudeConfig = path.join(home, '.claude', 'mcp.json')
-  const claudeDir = path.join(home, '.claude')
+  // Claude Code — uses mcpServers format
   agents.push({
     name: 'Claude Code',
-    detected: await commandExists('claude') || await directoryExists(claudeDir),
-    configPath: claudeConfig,
-    mcpConfig: {
-      mcpServers: {
-        'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] }
-      }
-    },
-    version: await commandExists('claude') ? (await execAsync('claude --version', { timeout: 3000 }).then(r => r.stdout.trim().split('\n')[0]).catch(() => 'unknown')) : undefined
+    detected: await commandExists('claude') || await directoryExists(path.join(home, '.claude')),
+    configPath: path.join(home, '.claude', 'mcp.json'),
+    version: await commandExists('claude') ? (await execAsync('claude --version', { timeout: 3000 }).then(r => r.stdout.trim().split('\n')[0]).catch(() => 'unknown')) : undefined,
+    writeConfig: async (p) => {
+      const data = await readJSON(p)
+      data.mcpServers = { ...(data.mcpServers || {}), 'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] } }
+      return writeJSON(p, data)
+    }
   })
 
-  // Cursor
-  const cursorMcp = path.join(home, '.cursor', 'mcp.json')
-  const cursorDir = path.join(home, '.cursor')
+  // Cursor — uses mcpServers format
   agents.push({
     name: 'Cursor',
-    detected: await directoryExists(cursorDir),
-    configPath: cursorMcp,
-    mcpConfig: {
-      mcpServers: {
-        'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] }
-      }
+    detected: await directoryExists(path.join(home, '.cursor')),
+    configPath: path.join(home, '.cursor', 'mcp.json'),
+    writeConfig: async (p) => {
+      const data = await readJSON(p)
+      data.mcpServers = { ...(data.mcpServers || {}), 'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] } }
+      return writeJSON(p, data)
     }
   })
 
-  // Codex
-  const codexMcp = path.join(home, '.codex', 'config.json')
-  const codexDir = path.join(home, '.codex')
+  // Codex — uses mcpServers format
   agents.push({
     name: 'Codex',
-    detected: await commandExists('codex') || await directoryExists(codexDir),
-    configPath: codexMcp,
-    mcpConfig: {
-      mcpServers: {
-        'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] }
-      }
+    detected: await commandExists('codex') || await directoryExists(path.join(home, '.codex')),
+    configPath: path.join(home, '.codex', 'config.json'),
+    writeConfig: async (p) => {
+      const data = await readJSON(p)
+      data.mcpServers = { ...(data.mcpServers || {}), 'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] } }
+      return writeJSON(p, data)
     }
   })
 
-  // Windsurf
-  const windsurfMcp = path.join(home, '.codeium', 'windsurf', 'mcp_config.json')
-  const windsurfDir = path.join(home, '.codeium', 'windsurf')
-  agents.push({
-    name: 'Windsurf',
-    detected: await directoryExists(windsurfDir),
-    configPath: windsurfMcp,
-    mcpConfig: {
-      mcpServers: {
-        'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] }
-      }
-    }
-  })
-
-  // OpenCode
-  const openCodeConfig = path.join(home, '.config', 'opencode', 'opencode.json')
-  const openCodeDir = path.join(home, '.config', 'opencode')
+  // OpenCode — uses mcp format (type + command array)
   agents.push({
     name: 'OpenCode',
-    detected: await directoryExists(openCodeDir),
-    configPath: openCodeConfig,
-    mcpConfig: {
-      mcpServers: {
-        'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] }
-      }
+    detected: await directoryExists(path.join(home, '.config', 'opencode')),
+    configPath: path.join(home, '.config', 'opencode', 'opencode.json'),
+    writeConfig: async (p) => {
+      const data = await readJSON(p)
+      // OpenCode uses "mcp" key, NOT "mcpServers"
+      // Format: { "type": "local", "command": [...], "enabled": true }
+      data.mcp = { ...(data.mcp || {}), 'make-laten': { type: 'local', command: MCP_CMD, enabled: true } }
+      // Remove wrong mcpServers key if exists
+      delete data.mcpServers
+      return writeJSON(p, data)
     }
   })
 
-  // Cline
-  const clineDir = path.join(home, '.cline')
-  const clineMcp = path.join(home, '.cline', 'mcp_settings.json')
+  // Windsurf — uses mcpServers format
+  agents.push({
+    name: 'Windsurf',
+    detected: await directoryExists(path.join(home, '.codeium', 'windsurf')),
+    configPath: path.join(home, '.codeium', 'windsurf', 'mcp_config.json'),
+    writeConfig: async (p) => {
+      const data = await readJSON(p)
+      data.mcpServers = { ...(data.mcpServers || {}), 'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] } }
+      return writeJSON(p, data)
+    }
+  })
+
+  // Cline — uses mcpServers format
   agents.push({
     name: 'Cline',
-    detected: await directoryExists(clineDir),
-    configPath: clineMcp,
-    mcpConfig: {
-      mcpServers: {
-        'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] }
-      }
+    detected: await directoryExists(path.join(home, '.cline')),
+    configPath: path.join(home, '.cline', 'mcp_settings.json'),
+    writeConfig: async (p) => {
+      const data = await readJSON(p)
+      data.mcpServers = { ...(data.mcpServers || {}), 'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] } }
+      return writeJSON(p, data)
     }
-  })
-
-  // GitHub Copilot (VS Code)
-  const vscodeDir = path.join(home, 'Library', 'Application Support', 'Code', 'User', 'globalStorage')
-  agents.push({
-    name: 'GitHub Copilot (VS Code)',
-    detected: await directoryExists(vscodeDir),
-    configPath: '',
-    mcpConfig: {}
   })
 
   // Gemini CLI
-  const geminiDir = path.join(home, '.gemini')
   agents.push({
     name: 'Gemini CLI',
-    detected: await commandExists('gemini') || await directoryExists(geminiDir),
+    detected: await commandExists('gemini') || await directoryExists(path.join(home, '.gemini')),
     configPath: path.join(home, '.gemini', 'settings.json'),
-    mcpConfig: {
-      mcpServers: {
-        'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] }
-      }
+    writeConfig: async (p) => {
+      const data = await readJSON(p)
+      data.mcpServers = { ...(data.mcpServers || {}), 'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] } }
+      return writeJSON(p, data)
     }
   })
 
   return agents
-}
-
-async function writeMCPConfig(agent: AgentInfo): Promise<boolean> {
-  try {
-    const dir = path.dirname(agent.configPath)
-    await fs.mkdir(dir, { recursive: true })
-
-    let existing: Record<string, any> = {}
-    try {
-      const raw = await fs.readFile(agent.configPath, 'utf-8')
-      existing = JSON.parse(raw)
-    } catch {}
-
-    const merged = {
-      ...existing,
-      mcpServers: {
-        ...(existing.mcpServers || {}),
-        ...agent.mcpConfig.mcpServers
-      }
-    }
-
-    await fs.writeFile(agent.configPath, JSON.stringify(merged, null, 2))
-    return true
-  } catch {
-    return false
-  }
 }
 
 function askQuestion(rl: readline.Interface, question: string): Promise<string> {
@@ -210,37 +186,18 @@ export async function initCommand(options: { all?: boolean; project?: boolean })
 
   if (options.all) {
     for (const agent of detected) {
-      const success = await writeMCPConfig(agent)
+      const success = await agent.writeConfig(agent.configPath)
       if (success) {
         console.log(`    ✓ ${agent.name} → MCP configured`)
       } else {
-        console.log(`    ✗ ${agent.name} → failed`)
+        console.log(`    ✗ ${agent.name} → failed to write config`)
       }
     }
   } else if (options.project) {
     const cwd = process.cwd()
-    const mcpConfig = {
-      mcpServers: {
-        'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] }
-      }
-    }
-
     const configPath = path.join(cwd, '.mcp.json')
-    let existing: Record<string, any> = {}
-    try {
-      const raw = await fs.readFile(configPath, 'utf-8')
-      existing = JSON.parse(raw)
-    } catch {}
-
-    const merged = {
-      ...existing,
-      mcpServers: {
-        ...(existing.mcpServers || {}),
-        ...mcpConfig.mcpServers
-      }
-    }
-
-    await fs.writeFile(configPath, JSON.stringify(merged, null, 2))
+    const data = { mcpServers: { 'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] } } }
+    await writeJSON(configPath, data)
     console.log(`    ✓ .mcp.json created in ${cwd}`)
   } else {
     const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
@@ -248,7 +205,7 @@ export async function initCommand(options: { all?: boolean; project?: boolean })
     for (const agent of detected) {
       const answer = await askQuestion(rl, `    Configure ${agent.name}? (Y/n) `)
       if (answer.toLowerCase() !== 'n') {
-        const success = await writeMCPConfig(agent)
+        const success = await agent.writeConfig(agent.configPath)
         if (success) {
           console.log(`      ✓ ${agent.name} → MCP configured`)
         } else {
