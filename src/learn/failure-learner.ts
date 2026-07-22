@@ -32,7 +32,7 @@ export class FailureLearner {
   }
 
   getSuggestions(type: string): string[] {
-    const failures = this.getFailuresByType(type)
+    const failures = Array.from(this.failures.values()).filter(f => f.type === type)
     const suggestions: string[] = []
     
     for (const failure of failures) {

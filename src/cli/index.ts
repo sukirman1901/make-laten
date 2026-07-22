@@ -2,6 +2,9 @@
 
 import { Command } from 'commander'
 import { readCommand } from './commands/read.js'
+import { grepCommand } from './commands/grep.js'
+import { gitDiffCommand, gitStatusCommand } from './commands/git.js'
+import { cacheStatsCommand, cacheClearCommand } from './commands/cache.js'
 
 const program = new Command()
 
@@ -15,5 +18,42 @@ program
   .description('Compressed file read')
   .argument('<file>', 'File path')
   .action(readCommand)
+
+program
+  .command('grep')
+  .description('Compressed grep with file grouping')
+  .argument('<pattern>', 'Search pattern')
+  .argument('[directory]', 'Directory to search', '.')
+  .option('-i, --ignore <ext>', 'File extension to ignore')
+  .action(grepCommand)
+
+const gitCmd = program
+  .command('git')
+  .description('Git operations')
+
+gitCmd
+  .command('diff')
+  .description('Compressed git diff')
+  .option('-s, --staged', 'Show staged changes')
+  .action(gitDiffCommand)
+
+gitCmd
+  .command('status')
+  .description('Git status summary')
+  .action(gitStatusCommand)
+
+const cacheCmd = program
+  .command('cache')
+  .description('Cache management')
+
+cacheCmd
+  .command('stats')
+  .description('Show cache statistics')
+  .action(cacheStatsCommand)
+
+cacheCmd
+  .command('clear')
+  .description('Clear cache')
+  .action(cacheClearCommand)
 
 program.parse()
