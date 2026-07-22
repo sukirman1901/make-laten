@@ -2,12 +2,14 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { createDatabase, type Database } from '../../src/graph/database.js'
 import fs from 'fs/promises'
 import path from 'path'
+import crypto from 'crypto'
 
 describe('Database', () => {
   let db: Database
-  const testDbPath = path.join(process.cwd(), 'test.db')
+  let testDbPath: string
 
   beforeEach(async () => {
+    testDbPath = path.join(process.cwd(), `test-${crypto.randomUUID()}.db`)
     db = await createDatabase(testDbPath)
   })
 

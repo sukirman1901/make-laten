@@ -3,13 +3,15 @@ import { createDatabase, type Database } from '../../src/graph/database.js'
 import { CrossSessionCache } from '../../src/cache/l2-cross.js'
 import fs from 'fs/promises'
 import path from 'path'
+import crypto from 'crypto'
 
 describe('CrossSessionCache', () => {
   let db: Database
   let cache: CrossSessionCache
-  const testDbPath = path.join(process.cwd(), 'test.db')
+  let testDbPath: string
 
   beforeEach(async () => {
+    testDbPath = path.join(process.cwd(), `test-${crypto.randomUUID()}.db`)
     db = await createDatabase(testDbPath)
     cache = new CrossSessionCache(db)
   })

@@ -3,13 +3,15 @@ import { createDatabase, type Database } from '../../src/graph/database.js'
 import { NodeStore } from '../../src/graph/nodes.js'
 import fs from 'fs/promises'
 import path from 'path'
+import crypto from 'crypto'
 
 describe('NodeStore', () => {
   let db: Database
   let store: NodeStore
-  const testDbPath = path.join(process.cwd(), 'test.db')
+  let testDbPath: string
 
   beforeEach(async () => {
+    testDbPath = path.join(process.cwd(), `test-${crypto.randomUUID()}.db`)
     db = await createDatabase(testDbPath)
     store = new NodeStore(db)
   })

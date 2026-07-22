@@ -4,14 +4,16 @@ import { NodeStore } from '../../src/graph/nodes.js'
 import { EdgeStore } from '../../src/graph/edges.js'
 import fs from 'fs/promises'
 import path from 'path'
+import crypto from 'crypto'
 
 describe('EdgeStore', () => {
   let db: Database
   let nodes: NodeStore
   let edges: EdgeStore
-  const testDbPath = path.join(process.cwd(), 'test.db')
+  let testDbPath: string
 
   beforeEach(async () => {
+    testDbPath = path.join(process.cwd(), `test-${crypto.randomUUID()}.db`)
     db = await createDatabase(testDbPath)
     nodes = new NodeStore(db)
     edges = new EdgeStore(db)

@@ -1,3 +1,5 @@
+export const VERSION = '0.1.0'
+
 export * from './graph/index.js'
 export * from './compress/index.js'
 export * from './cache/index.js'

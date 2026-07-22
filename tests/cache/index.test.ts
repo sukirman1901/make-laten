@@ -3,13 +3,15 @@ import { createDatabase, type Database } from '../../src/graph/database.js'
 import { makeLatenCache } from '../../src/cache/index.js'
 import fs from 'fs/promises'
 import path from 'path'
+import crypto from 'crypto'
 
 describe('makeLatenCache', () => {
   let db: Database
   let cache: ReturnType<typeof makeLatenCache>
-  const testDbPath = path.join(process.cwd(), 'test.db')
+  let testDbPath: string
 
   beforeEach(async () => {
+    testDbPath = path.join(process.cwd(), `test-${crypto.randomUUID()}.db`)
     db = await createDatabase(testDbPath)
     cache = makeLatenCache(db)
   })
