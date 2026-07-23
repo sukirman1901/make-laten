@@ -1,4 +1,4 @@
-import { exec } from 'child_process'
+import { exec, execFile } from 'child_process'
 import { promisify } from 'util'
 import fs from 'fs/promises'
 import path from 'path'
@@ -6,6 +6,7 @@ import readline from 'readline'
 import { CLAUDE_MD, CURSORRULES, AGENTS_MD, GEMINI_MD } from '../templates/index.js'
 
 const execAsync = promisify(exec)
+const execFileAsync = promisify(execFile)
 
 interface AgentInfo {
   name: string
@@ -21,7 +22,7 @@ function getHome(): string {
 
 async function commandExists(cmd: string): Promise<boolean> {
   try {
-    await execAsync(`which ${cmd}`, { timeout: 3000 })
+    await execFileAsync('which', [cmd], { timeout: 3000 })
     return true
   } catch {
     return false
