@@ -35,7 +35,7 @@ const webRouter = new WebRouter()
 const TOOLS = [
   // Compress Layer
   {
-    name: 'make-laten-read',
+    name: 'read',
     description: 'Read files with 85% token savings — use INSTEAD of Read tool',
     inputSchema: {
       type: 'object',
@@ -46,8 +46,8 @@ const TOOLS = [
     }
   },
   {
-    name: 'make-laten-read-detail',
-    description: 'Expand zero-loss detail from overview — use AFTER make-laten-read',
+    name: 'read-detail',
+    description: 'Expand zero-loss detail from overview — use AFTER read tool',
     inputSchema: {
       type: 'object',
       properties: {
@@ -61,7 +61,7 @@ const TOOLS = [
     }
   },
   {
-    name: 'make-laten-grep',
+    name: 'grep',
     description: 'Search code grouped by file — use INSTEAD of grep/rg command',
     inputSchema: {
       type: 'object',
@@ -73,7 +73,7 @@ const TOOLS = [
     }
   },
   {
-    name: 'make-laten-git-diff',
+    name: 'git-diff',
     description: 'Show git changes with 85% savings — use INSTEAD of git diff',
     inputSchema: {
       type: 'object',
@@ -83,14 +83,14 @@ const TOOLS = [
     }
   },
   {
-    name: 'make-laten-git-status',
+    name: 'git-status',
     description: 'Show git status grouped by type — use INSTEAD of git status',
     inputSchema: { type: 'object', properties: {} }
   },
 
   // Route Layer
   {
-    name: 'make-laten-route',
+    name: 'route',
     description: 'Route input to best compressor — use when unsure which tool',
     inputSchema: {
       type: 'object',
@@ -102,7 +102,7 @@ const TOOLS = [
     }
   },
   {
-    name: 'make-laten-strategy',
+    name: 'strategy',
     description: 'Pick compression level — conservative/balanced/aggressive',
     inputSchema: {
       type: 'object',
@@ -115,12 +115,12 @@ const TOOLS = [
 
   // Cache Layer
   {
-    name: 'make-laten-cache-stats',
+    name: 'cache-stats',
     description: 'Show cache hit rate — check if caching helps',
     inputSchema: { type: 'object', properties: {} }
   },
   {
-    name: 'make-laten-cache-get',
+    name: 'cache-get',
     description: 'Get cached value — faster than re-computing',
     inputSchema: {
       type: 'object',
@@ -131,7 +131,7 @@ const TOOLS = [
     }
   },
   {
-    name: 'make-laten-cache-set',
+    name: 'cache-set',
     description: 'Cache result for session — save tokens on repeat',
     inputSchema: {
       type: 'object',
@@ -143,24 +143,24 @@ const TOOLS = [
     }
   },
   {
-    name: 'make-laten-cache-clear',
+    name: 'cache-clear',
     description: 'Clear session cache — fresh start',
     inputSchema: { type: 'object', properties: {} }
   },
 
   // Learn Layer
   {
-    name: 'make-laten-patterns',
+    name: 'patterns',
     description: 'Show learned patterns — check what works',
     inputSchema: { type: 'object', properties: {} }
   },
   {
-    name: 'make-laten-failures',
+    name: 'failures',
     description: 'Show failure records — learn from mistakes',
     inputSchema: { type: 'object', properties: {} }
   },
   {
-    name: 'make-laten-suggestions',
+    name: 'suggestions',
     description: 'Get smart suggestions — based on patterns',
     inputSchema: {
       type: 'object',
@@ -172,7 +172,7 @@ const TOOLS = [
 
   // Correct Layer
   {
-    name: 'make-laten-correct',
+    name: 'correct',
     description: 'Fix typos in text — use before sending',
     inputSchema: {
       type: 'object',
@@ -185,7 +185,7 @@ const TOOLS = [
 
   // Web Layer
   {
-    name: 'make-laten-search',
+    name: 'search',
     description: 'Web search with compression — use INSTEAD of websearch',
     inputSchema: {
       type: 'object',
@@ -197,7 +197,7 @@ const TOOLS = [
     }
   },
   {
-    name: 'make-laten-fetch',
+    name: 'fetch',
     description: 'Fetch URL with 75% savings — use INSTEAD of webfetch',
     inputSchema: {
       type: 'object',
@@ -211,7 +211,7 @@ const TOOLS = [
 
   // Tool Layer
   {
-    name: 'make-laten-tools',
+    name: 'tools',
     description: 'List all make-laten tools — check what\'s available',
     inputSchema: { type: 'object', properties: {} }
   }
@@ -443,24 +443,24 @@ async function handleTools() {
 }
 
 const handlers: Record<string, (params: any) => Promise<any>> = {
-  'make-laten-read': handleRead,
-  'make-laten-read-detail': handleReadDetail,
-  'make-laten-grep': handleGrep,
-  'make-laten-git-diff': handleGitDiff,
-  'make-laten-git-status': handleGitStatus,
-  'make-laten-route': handleRoute,
-  'make-laten-strategy': handleStrategy,
-  'make-laten-cache-stats': handleCacheStats,
-  'make-laten-cache-get': handleCacheGet,
-  'make-laten-cache-set': handleCacheSet,
-  'make-laten-cache-clear': handleCacheClear,
-  'make-laten-patterns': handlePatterns,
-  'make-laten-failures': handleFailures,
-  'make-laten-suggestions': handleSuggestions,
-  'make-laten-correct': handleCorrect,
-  'make-laten-search': handleSearch,
-  'make-laten-fetch': handleFetch,
-  'make-laten-tools': handleTools
+  'read': handleRead,
+  'read-detail': handleReadDetail,
+  'grep': handleGrep,
+  'git-diff': handleGitDiff,
+  'git-status': handleGitStatus,
+  'route': handleRoute,
+  'strategy': handleStrategy,
+  'cache-stats': handleCacheStats,
+  'cache-get': handleCacheGet,
+  'cache-set': handleCacheSet,
+  'cache-clear': handleCacheClear,
+  'patterns': handlePatterns,
+  'failures': handleFailures,
+  'suggestions': handleSuggestions,
+  'correct': handleCorrect,
+  'search': handleSearch,
+  'fetch': handleFetch,
+  'tools': handleTools
 }
 
 let requestId = 0

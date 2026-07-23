@@ -10,7 +10,7 @@ describe('Platform config templates', () => {
   ])('%s is a non-empty string containing key tools', (_, template) => {
     expect(typeof template).toBe('string')
     expect(template.length).toBeGreaterThan(0)
-    expect(template).toContain('make-laten-read')
-    expect(template).toContain('make-laten-grep')
+    expect(template).toContain('read')
+    expect(template).toContain('grep')
   })
 })
