@@ -11,32 +11,32 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-primary: #fafafa;
-      --bg-secondary: #ffffff;
-      --bg-card: #ffffff;
-      --bg-card-hover: #f8fafc;
-      --border: #e2e8f0;
-      --border-light: #f1f5f9;
-      --text-primary: #0f172a;
-      --text-secondary: #475569;
-      --text-muted: #94a3b8;
-      --accent: #6366f1;
-      --accent-light: #eef2ff;
-      --accent-hover: #4f46e5;
-      --success: #22c55e;
-      --success-light: #f0fdf4;
-      --warning: #f59e0b;
-      --warning-light: #fffbeb;
-      --danger: #ef4444;
-      --danger-light: #fef2f2;
-      --radius: 12px;
-      --radius-sm: 8px;
-      --radius-lg: 16px;
-      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-      --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-      --transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      --bg-primary: hsl(210 40% 98%);
+      --bg-secondary: hsl(0 0% 100%);
+      --bg-card: hsl(0 0% 100%);
+      --bg-card-hover: hsl(214 32% 95%);
+      --border: hsl(214 32% 87%);
+      --border-light: hsl(214 32% 93%);
+      --text-primary: hsl(222 47% 11%);
+      --text-secondary: hsl(215 16% 47%);
+      --text-muted: hsl(215 16% 57%);
+      --accent: hsl(183 100% 40%);
+      --accent-light: hsl(183 60% 94%);
+      --accent-hover: hsl(183 100% 35%);
+      --success: hsl(160 84% 39%);
+      --success-light: hsl(152 76% 95%);
+      --warning: hsl(38 92% 50%);
+      --warning-light: hsl(48 96% 95%);
+      --danger: hsl(0 84% 60%);
+      --danger-light: hsl(0 86% 97%);
+      --radius: 8px;
+      --radius-sm: 6px;
+      --radius-lg: 12px;
+      --shadow-sm: 0 0 0 1px hsl(214 32% 87% / 0.5);
+      --shadow: 0 0 0 1px hsl(214 32% 87% / 0.4), 0 1px 3px hsl(222 47% 11% / 0.06);
+      --shadow-md: 0 0 0 1px hsl(214 32% 87% / 0.3), 0 4px 12px hsl(222 47% 11% / 0.08);
+      --shadow-lg: 0 0 0 1px hsl(214 32% 87% / 0.3), 0 8px 24px hsl(222 47% 11% / 0.1);
+      --shadow-xl: 0 0 0 1px hsl(214 32% 87% / 0.2), 0 16px 48px hsl(222 47% 11% / 0.12);
       --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
     }
@@ -55,15 +55,15 @@
     /* Layout */
     .app {
       display: grid;
-      grid-template-columns: 220px 1fr;
+      grid-template-columns: 260px 1fr;
       min-height: 100vh;
     }
 
     /* Sidebar */
     .sidebar {
       background: var(--bg-secondary);
-      border-right: 1px solid var(--border);
-      padding: 20px 12px;
+      border-right: 1px solid var(--border-light);
+      padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 4px;
@@ -74,46 +74,79 @@
     }
 
     .sidebar-logo {
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 700;
-      padding: 8px 12px 20px;
-      border-bottom: 1px solid var(--border-light);
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      letter-spacing: -0.02em;
-    }
-
-    .sidebar-logo svg {
-      width: 20px;
-      height: 20px;
-      color: var(--accent);
-    }
-
-    .nav-item {
-      padding: 8px 12px;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: var(--transition);
+      padding: 8px 8px 20px;
+      margin-bottom: 4px;
       display: flex;
       align-items: center;
       gap: 10px;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    .sidebar-logo-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: var(--bg-card-hover);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: var(--text-secondary);
-      font-size: 13.5px;
+    }
+
+    .sidebar-logo-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .nav-section {
+      margin-top: 16px;
+      padding: 0 8px;
+    }
+
+    .nav-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 8px 12px;
+      margin-bottom: 4px;
+    }
+
+    .nav-item {
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: color 150ms ease-out, background-color 150ms ease-out;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-secondary);
+      font-size: 14px;
       font-weight: 450;
       border: 1px solid transparent;
+      margin-bottom: 2px;
     }
 
     .nav-item svg {
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
       flex-shrink: 0;
+      opacity: 0.7;
     }
 
-    .nav-item:hover {
-      background: var(--bg-card-hover);
-      color: var(--text-primary);
+    @media (hover: hover) {
+      .nav-item:hover {
+        background: var(--bg-card-hover);
+        color: var(--text-primary);
+      }
+
+      .nav-item:hover svg {
+        opacity: 1;
+      }
     }
 
     .nav-item:focus-visible {
@@ -127,101 +160,179 @@
       font-weight: 500;
     }
 
+    .nav-item.active svg {
+      opacity: 1;
+    }
+
     /* Main */
     .main {
-      padding: 32px 40px;
+      padding: 40px 48px;
       overflow-y: auto;
-      max-width: 1200px;
+      max-width: 1400px;
     }
 
     .page { display: none; }
     .page.active { display: block; }
 
+    .page-header {
+      margin-bottom: 32px;
+    }
+
     .page-title {
-      font-size: 20px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 24px;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
       color: var(--text-primary);
+      text-wrap: balance;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
     }
 
     /* Cards */
     .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin-bottom: 32px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
     }
 
     .card {
       background: var(--bg-card);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-light);
       border-radius: var(--radius);
-      padding: 20px;
-      transition: var(--transition);
+      padding: 24px;
+      transition: box-shadow 200ms ease-out, transform 200ms ease-out;
       box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
     }
 
-    .card:hover {
-      box-shadow: var(--shadow-md);
-      border-color: #cbd5e1;
+    @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+      .card:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-2px);
+      }
     }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .card-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .card-icon.accent { background: var(--accent-light); color: var(--accent); }
+    .card-icon.success { background: var(--success-light); color: var(--success); }
+    .card-icon.warning { background: var(--warning-light); color: var(--warning); }
+    .card-icon.danger { background: var(--danger-light); color: var(--danger); }
 
     .card-label {
       font-size: 12px;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 8px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .card-label svg {
-      width: 14px;
-      height: 14px;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+      font-weight: 600;
     }
 
     .card-value {
-      font-size: 26px;
+      font-size: 32px;
       font-weight: 700;
       font-family: var(--font-mono);
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
       color: var(--text-primary);
+      line-height: 1.2;
+      font-variant-numeric: tabular-nums;
     }
 
-    .card-value.accent { color: var(--accent); }
-    .card-value.success { color: var(--success); }
-    .card-value.warning { color: var(--warning); }
-    .card-value.danger { color: var(--danger); }
+    .card-change {
+      font-size: 12px;
+      font-weight: 500;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .card-change.positive { color: var(--success); }
+    .card-change.negative { color: var(--danger); }
 
     /* Charts */
     .chart-container {
       background: var(--bg-card);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-light);
       border-radius: var(--radius);
-      padding: 24px;
-      margin-bottom: 24px;
+      padding: 28px;
+      margin-bottom: 28px;
       box-shadow: var(--shadow-sm);
     }
 
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
     .chart-title {
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 600;
-      margin-bottom: 16px;
       color: var(--text-primary);
       letter-spacing: -0.01em;
+    }
+
+    .chart-legend {
+      display: flex;
+      gap: 16px;
+    }
+
+    .chart-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .chart-legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
     }
 
     /* Table */
     .table-container {
       background: var(--bg-card);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-light);
       border-radius: var(--radius);
       overflow: hidden;
       box-shadow: var(--shadow-sm);
+    }
+
+    .table-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .table-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
     }
 
     table {
@@ -231,65 +342,226 @@
 
     th {
       text-align: left;
-      padding: 12px 16px;
+      padding: 14px 24px;
       font-size: 11px;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      border-bottom: 1px solid var(--border);
+      letter-spacing: 0.06em;
+      border-bottom: 1px solid var(--border-light);
       background: var(--bg-primary);
       font-weight: 600;
     }
 
     td {
-      padding: 12px 16px;
+      padding: 16px 24px;
       font-size: 13.5px;
       border-bottom: 1px solid var(--border-light);
       color: var(--text-secondary);
     }
 
     tr:last-child td { border-bottom: none; }
-    tr { transition: var(--transition); }
-    tr:hover td { background: var(--bg-card-hover); }
+    tr { transition: background-color 100ms ease-out; }
+    @media (hover: hover) {
+      tr:hover td { background: var(--bg-card-hover); }
+    }
 
     /* Graph */
     #graph-container {
       background: var(--bg-card);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-light);
       border-radius: var(--radius);
-      height: 600px;
+      height: 700px;
       position: relative;
       overflow: hidden;
       box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     #graph-container svg { width: 100%; height: 100%; }
 
-    .graph-node { cursor: pointer; transition: var(--transition); }
-    .graph-node:hover { filter: brightness(1.1); }
+    .graph-node {
+      cursor: pointer;
+      transition: filter 150ms ease-out;
+    }
+
+    @media (hover: hover) {
+      .graph-node:hover {
+        filter: brightness(1.1);
+        stroke: var(--accent);
+        stroke-width: 2px;
+      }
+    }
+
+    .graph-node.selected {
+      stroke: var(--accent);
+      stroke-width: 3px;
+      filter: drop-shadow(0 0 8px hsl(183 100% 40% / 0.4));
+    }
 
     .graph-label {
-      font-size: 10px;
+      font-size: 11px;
       fill: var(--text-secondary);
       pointer-events: none;
       font-family: var(--font-mono);
+      font-weight: 500;
     }
 
     .graph-link {
       stroke: var(--border);
-      stroke-opacity: 0.5;
+      stroke-opacity: 0.4;
+      stroke-width: 1.5px;
+    }
+
+    .graph-link.highlighted {
+      stroke: var(--accent);
+      stroke-opacity: 0.8;
+      stroke-width: 2.5px;
+    }
+
+    /* Graph Tooltip */
+    .graph-tooltip {
+      position: absolute;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      box-shadow: var(--shadow-xl);
+      pointer-events: none;
+      z-index: 100;
+      max-width: 320px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .graph-tooltip.visible {
+      opacity: 1;
+    }
+
+    .graph-tooltip-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .graph-tooltip-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .graph-tooltip-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .graph-tooltip-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+      word-break: break-all;
+    }
+
+    .graph-tooltip-type {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .graph-tooltip-meta {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .graph-tooltip-meta div {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 4px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .graph-tooltip-meta div:last-child {
+      border-bottom: none;
+    }
+
+    .graph-tooltip-meta span:first-child {
+      color: var(--text-muted);
+    }
+
+    .graph-tooltip-meta span:last-child {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    /* Graph Controls */
+    .graph-controls {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 50;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 4px;
+      box-shadow: var(--shadow);
+    }
+
+    .graph-control-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 150ms ease-out, background-color 150ms ease-out;
+      box-shadow: none;
+    }
+
+    @media (hover: hover) {
+      .graph-control-btn:hover {
+        background: var(--accent-light);
+        color: var(--accent);
+      }
+    }
+
+    .graph-control-btn svg {
+      width: 18px;
+      height: 18px;
     }
 
     /* Badge */
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 2px 10px;
+      gap: 5px;
+      padding: 4px 12px;
       border-radius: 9999px;
       font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.02em;
+    }
+
+    .badge svg {
+      width: 12px;
+      height: 12px;
     }
 
     .badge-success { background: var(--success-light); color: var(--success); }
@@ -300,31 +572,81 @@
     /* Empty state */
     .empty-state {
       text-align: center;
-      padding: 48px 24px;
+      padding: 64px 32px;
       color: var(--text-muted);
     }
 
-    .empty-state svg {
-      width: 48px;
-      height: 48px;
-      margin-bottom: 16px;
+    .empty-state-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: var(--bg-card-hover);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .empty-state-icon svg {
+      width: 28px;
+      height: 28px;
       opacity: 0.5;
+    }
+
+    .empty-state-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .empty-state-desc {
+      font-size: 13px;
+      color: var(--text-muted);
     }
 
     /* Pattern/Failure items */
     .list-item {
-      padding: 12px 16px;
+      padding: 16px 24px;
       border-bottom: 1px solid var(--border-light);
-      transition: var(--transition);
+      transition: background-color 100ms ease-out;
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
 
-    .list-item:hover { background: var(--bg-card-hover); }
+    @media (hover: hover) {
+      .list-item:hover { background: var(--bg-card-hover); }
+    }
     .list-item:last-child { border-bottom: none; }
+
+    .list-item-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .list-item-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .list-item-icon.pattern { background: var(--accent-light); color: var(--accent); }
+    .list-item-icon.failure { background: var(--danger-light); color: var(--danger); }
+
+    .list-item-content {
+      flex: 1;
+    }
 
     .list-item-title {
       font-weight: 500;
       color: var(--text-primary);
-      margin-bottom: 4px;
+      margin-bottom: 2px;
+      font-size: 13.5px;
     }
 
     .list-item-meta {
@@ -332,12 +654,132 @@
       color: var(--text-muted);
     }
 
+    /* Mobile topbar */
+    .mobile-topbar {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      padding: 0 16px;
+      z-index: 130;
+      border-bottom: 1px solid var(--border-light);
+      align-items: center;
+      justify-content: space-between;
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      background: hsl(0 0% 100% / 0.85);
+    }
+
+    .mobile-topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+
+    .mobile-topbar-brand-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .mobile-topbar-brand-icon svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .mobile-topbar-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: transparent;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 150ms ease-out;
+    }
+
+    @media (hover: hover) {
+      .mobile-topbar-btn:hover {
+        background: var(--bg-card-hover);
+      }
+    }
+
+    .mobile-topbar-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: hsl(222 47% 11% / 0.4);
+      z-index: 140;
+      backdrop-filter: blur(2px);
+    }
+
+    .sidebar-backdrop.open { display: block; }
+
     /* Responsive */
+    @media (max-width: 1024px) {
+      .main { padding: 32px; }
+      .cards { grid-template-columns: repeat(2, 1fr); }
+    }
+
     @media (max-width: 768px) {
       .app { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
-      .main { padding: 16px 20px; }
-      .cards { grid-template-columns: repeat(2, 1fr); }
+
+      .sidebar {
+        display: none;
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 150;
+        width: 280px;
+        box-shadow: var(--shadow-xl);
+      }
+
+      .sidebar.open { display: flex; }
+
+      .mobile-topbar { display: flex; padding-top: env(safe-area-inset-top); height: calc(56px + env(safe-area-inset-top)); }
+
+      .main {
+        padding: 24px 20px;
+        padding-top: 72px;
+      }
+
+      .page-title { font-size: 20px; }
+
+      .cards { grid-template-columns: 1fr; gap: 12px; }
+
+      #graph-container { height: 500px; }
+
+      .table-container { overflow-x: auto; }
+
+      table { min-width: 600px; }
+
+      .chart-container { padding: 20px; }
+    }
+
+    @media (max-width: 480px) {
+      .main { padding: 16px 16px; padding-top: 72px; }
+      .card { padding: 20px; }
+      .card-value { font-size: 24px; }
     }
 
     /* Focus visible */
@@ -346,87 +788,125 @@
       outline-offset: 2px;
     }
 
-    /* Skip link */
-    .skip-link {
-      position: absolute;
-      top: -40px;
-      left: 0;
-      background: var(--accent);
-      color: white;
-      padding: 8px 16px;
-      z-index: 100;
-      transition: var(--transition);
-      text-decoration: none;
-      border-radius: 0 0 8px 0;
-    }
-
-    .skip-link:focus { top: 0; }
-
     /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .page.active { animation: none; }
+    }
+
+    .page.active {
+      animation: fadeIn 200ms ease-out;
+    }
   </style>
 </head>
 <body>
-  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+  <div class="mobile-topbar" id="mobile-topbar">
+    <div class="mobile-topbar-brand">
+      <div class="mobile-topbar-brand-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      make-laten
+    </div>
+    <button class="mobile-topbar-btn" id="mobile-menu-btn" aria-label="Open menu">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+    </button>
+  </div>
 
   <div class="app">
-    <nav class="sidebar" role="navigation" aria-label="Main navigation">
+    <nav class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
       <div class="sidebar-logo">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <div class="sidebar-logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
         make-laten
       </div>
-      <div class="nav-item active" data-page="overview" tabindex="0" role="button" aria-pressed="true">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
-        Overview
+
+      <div class="nav-section">
+        <div class="nav-section-title">Dashboard</div>
+        <div class="nav-item active" data-page="overview" tabindex="0" role="button" aria-pressed="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          Overview
+        </div>
+        <div class="nav-item" data-page="tokens" tabindex="0" role="button" aria-pressed="false">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Tokens
+        </div>
+        <div class="nav-item" data-page="compress" tabindex="0" role="button" aria-pressed="false">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
+          Compress
+        </div>
       </div>
-      <div class="nav-item" data-page="tokens" tabindex="0" role="button" aria-pressed="false">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        Tokens
+
+      <div class="nav-section">
+        <div class="nav-section-title">Intelligence</div>
+        <div class="nav-item" data-page="learn" tabindex="0" role="button" aria-pressed="false">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><path d="m16.2 16.2 2.9 2.9"/><path d="M12 18v4"/><path d="m4.9 19.1 2.9-2.9"/><path d="M2 12h4"/><path d="m4.9 4.9 2.9 2.9"/></svg>
+          Learn
+        </div>
+        <div class="nav-item" data-page="cache" tabindex="0" role="button" aria-pressed="false">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>
+          Cache
+        </div>
+        <div class="nav-item" data-page="graph" tabindex="0" role="button" aria-pressed="false">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+          Graph
+        </div>
       </div>
-      <div class="nav-item" data-page="compress" tabindex="0" role="button" aria-pressed="false">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
-        Compress
-      </div>
-      <div class="nav-item" data-page="learn" tabindex="0" role="button" aria-pressed="false">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><path d="m16.2 16.2 2.9 2.9"/><path d="M12 18v4"/><path d="m4.9 19.1 2.9-2.9"/><path d="M2 12h4"/><path d="m4.9 4.9 2.9 2.9"/></svg>
-        Learn
-      </div>
-      <div class="nav-item" data-page="cache" tabindex="0" role="button" aria-pressed="false">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>
-        Cache
-      </div>
-      <div class="nav-item" data-page="graph" tabindex="0" role="button" aria-pressed="false">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
-        Graph
-      </div>
-      <div class="nav-item" data-page="activity" tabindex="0" role="button" aria-pressed="false">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-        Activity
+
+      <div class="nav-section">
+        <div class="nav-section-title">System</div>
+        <div class="nav-item" data-page="activity" tabindex="0" role="button" aria-pressed="false">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          Activity
+        </div>
       </div>
     </nav>
 
     <main class="main" id="main-content">
       <!-- Overview Page -->
       <section id="page-overview" class="page active" aria-label="Overview">
-        <h1 class="page-title">Overview</h1>
+        <div class="page-header">
+          <h1 class="page-title">Overview</h1>
+          <p class="page-subtitle">Token usage, compression stats, and performance metrics</p>
+        </div>
         <div class="cards" id="summary-cards"></div>
         <div class="chart-container">
-          <div class="chart-title">Token Usage Over Time</div>
+          <div class="chart-header">
+            <div class="chart-title">Token Usage Over Time</div>
+            <div class="chart-legend" id="token-legend"></div>
+          </div>
           <canvas id="token-chart"></canvas>
         </div>
         <div class="chart-container">
-          <div class="chart-title">Tool Usage</div>
+          <div class="chart-header">
+            <div class="chart-title">Tool Usage Distribution</div>
+          </div>
           <canvas id="tool-chart"></canvas>
         </div>
       </section>
 
       <!-- Tokens Page -->
       <section id="page-tokens" class="page" aria-label="Token usage details">
-        <h1 class="page-title">Token Usage</h1>
+        <div class="page-header">
+          <h1 class="page-title">Token Usage</h1>
+          <p class="page-subtitle">Detailed breakdown of all tool calls</p>
+        </div>
         <div class="table-container">
+          <div class="table-header">
+            <div class="table-title">Recent Requests</div>
+          </div>
           <table>
             <thead>
               <tr>
@@ -446,44 +926,90 @@
 
       <!-- Compress Page -->
       <section id="page-compress" class="page" aria-label="Compression statistics">
-        <h1 class="page-title">Compression</h1>
+        <div class="page-header">
+          <h1 class="page-title">Compression</h1>
+          <p class="page-subtitle">Compression ratios and savings by tool</p>
+        </div>
         <div class="cards" id="compress-cards"></div>
         <div class="chart-container">
-          <div class="chart-title">Compression Ratio by Tool</div>
+          <div class="chart-header">
+            <div class="chart-title">Compression Ratio by Tool</div>
+          </div>
           <canvas id="compress-chart"></canvas>
         </div>
       </section>
 
       <!-- Learn Page -->
       <section id="page-learn" class="page" aria-label="Learned patterns">
-        <h1 class="page-title">Learn</h1>
+        <div class="page-header">
+          <h1 class="page-title">Learn</h1>
+          <p class="page-subtitle">Patterns, failures, and learned behaviors</p>
+        </div>
         <div class="cards" id="learn-cards"></div>
         <div class="chart-container">
-          <div class="chart-title">Patterns</div>
+          <div class="chart-header">
+            <div class="chart-title">Patterns</div>
+          </div>
           <div id="patterns-list"></div>
         </div>
         <div class="chart-container">
-          <div class="chart-title">Failures</div>
+          <div class="chart-header">
+            <div class="chart-title">Failures</div>
+          </div>
           <div id="failures-list"></div>
         </div>
       </section>
 
       <!-- Cache Page -->
       <section id="page-cache" class="page" aria-label="Cache statistics">
-        <h1 class="page-title">Cache</h1>
+        <div class="page-header">
+          <h1 class="page-title">Cache</h1>
+          <p class="page-subtitle">Cache performance and hit rates</p>
+        </div>
         <div class="cards" id="cache-cards"></div>
       </section>
 
       <!-- Graph Page -->
       <section id="page-graph" class="page" aria-label="Code graph visualization">
-        <h1 class="page-title">Code Graph</h1>
-        <div id="graph-container"></div>
+        <div class="page-header">
+          <h1 class="page-title">Code Graph</h1>
+          <p class="page-subtitle">Interactive visualization of code relationships</p>
+        </div>
+        <div id="graph-container">
+          <div class="graph-controls">
+            <button class="graph-control-btn" id="zoom-in" title="Zoom in">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/><line x1="11" x2="11" y1="8" y2="14"/><line x1="8" x2="14" y1="11" y2="11"/></svg>
+            </button>
+            <button class="graph-control-btn" id="zoom-out" title="Zoom out">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/><line x1="8" x2="14" y1="11" y2="11"/></svg>
+            </button>
+            <button class="graph-control-btn" id="zoom-reset" title="Reset zoom">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
+            </button>
+          </div>
+          <div class="graph-tooltip" id="graph-tooltip">
+            <div class="graph-tooltip-header">
+              <div class="graph-tooltip-icon" id="tooltip-icon"></div>
+              <div>
+                <div class="graph-tooltip-title" id="tooltip-title"></div>
+                <div class="graph-tooltip-type" id="tooltip-type"></div>
+              </div>
+            </div>
+            <div class="graph-tooltip-meta" id="tooltip-meta"></div>
+          </div>
+        </div>
       </section>
 
       <!-- Activity Page -->
       <section id="page-activity" class="page" aria-label="Activity timeline">
-        <h1 class="page-title">Activity</h1>
+        <div class="page-header">
+          <h1 class="page-title">Activity</h1>
+          <p class="page-subtitle">Recent tool calls and their status</p>
+        </div>
         <div class="table-container">
+          <div class="table-header">
+            <div class="table-title">Recent Activity</div>
+          </div>
           <table>
             <thead>
               <tr>
@@ -512,8 +1038,47 @@
       alert: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
       check: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
       x: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
-      link: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>'
+      link: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+      activity: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
+      graph: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>'
     }
+
+    // Mobile menu
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn')
+    const sidebar = document.getElementById('sidebar')
+    const backdrop = document.getElementById('sidebar-backdrop')
+
+    function openSidebar() {
+      sidebar.classList.add('open')
+      backdrop.classList.add('open')
+      document.body.style.overflow = 'hidden'
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove('open')
+      backdrop.classList.remove('open')
+      document.body.style.overflow = ''
+    }
+
+    mobileMenuBtn.addEventListener('click', () => {
+      if (sidebar.classList.contains('open')) {
+        closeSidebar()
+      } else {
+        openSidebar()
+      }
+    })
+
+    backdrop.addEventListener('click', closeSidebar)
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+        closeSidebar()
+      }
+    })
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) closeSidebar()
+    })
 
     // Navigation
     document.querySelectorAll('.nav-item').forEach(item => {
@@ -526,6 +1091,10 @@
         item.classList.add('active')
         item.setAttribute('aria-pressed', 'true')
         document.getElementById(`page-${item.dataset.page}`).classList.add('active')
+
+        if (window.innerWidth <= 768) {
+          closeSidebar()
+        }
       })
 
       item.addEventListener('keydown', (e) => {
@@ -595,27 +1164,33 @@
 
       document.getElementById('summary-cards').innerHTML = `
         <div class="card">
-          <div class="card-label">${icons.zap} Total Requests</div>
+          <div class="card-icon accent">${icons.zap}</div>
+          <div class="card-label">Total Requests</div>
           <div class="card-value accent">${s.totalRequests}</div>
         </div>
         <div class="card">
-          <div class="card-label">${icons.file} Input Tokens</div>
+          <div class="card-icon">${icons.file}</div>
+          <div class="card-label">Input Tokens</div>
           <div class="card-value">${formatTokens(s.totalInputTokens)}</div>
         </div>
         <div class="card">
-          <div class="card-label">${icons.cache} Cached Tokens</div>
+          <div class="card-icon success">${icons.cache}</div>
+          <div class="card-label">Cached Tokens</div>
           <div class="card-value success">${formatTokens(s.totalCachedTokens)}</div>
         </div>
         <div class="card">
-          <div class="card-label">${icons.file} Output Tokens</div>
+          <div class="card-icon">${icons.file}</div>
+          <div class="card-label">Output Tokens</div>
           <div class="card-value">${formatTokens(s.totalOutputTokens)}</div>
         </div>
         <div class="card">
-          <div class="card-label">${icons.dollar} Estimated Cost</div>
+          <div class="card-icon warning">${icons.dollar}</div>
+          <div class="card-label">Estimated Cost</div>
           <div class="card-value warning">${formatCost(s.estimatedCost)}</div>
         </div>
         <div class="card">
-          <div class="card-label">${icons.compress} Avg Compression</div>
+          <div class="card-icon success">${icons.compress}</div>
+          <div class="card-label">Avg Compression</div>
           <div class="card-value success">${(s.avgCompression * 100).toFixed(0)}%</div>
         </div>
       `
@@ -628,20 +1203,30 @@
           data: {
             labels: recent.map((r, i) => i),
             datasets: [
-              { label: 'Input', data: recent.map(r => r.inputTokens), borderColor: '#6366f1', fill: true, backgroundColor: 'rgba(99,102,241,0.08)', tension: 0.3 },
-              { label: 'Output', data: recent.map(r => r.outputTokens), borderColor: '#22c55e', fill: true, backgroundColor: 'rgba(34,197,94,0.08)', tension: 0.3 },
-              { label: 'Cached', data: recent.map(r => r.cachedTokens), borderColor: '#f59e0b', fill: true, backgroundColor: 'rgba(245,158,11,0.08)', tension: 0.3 }
+              { label: 'Input', data: recent.map(r => r.inputTokens), borderColor: 'hsl(183 100% 40%)', fill: true, backgroundColor: 'hsl(183 100% 40% / 0.06)', tension: 0.4, borderWidth: 2 },
+              { label: 'Output', data: recent.map(r => r.outputTokens), borderColor: 'hsl(160 84% 39%)', fill: true, backgroundColor: 'hsl(160 84% 39% / 0.06)', tension: 0.4, borderWidth: 2 },
+              { label: 'Cached', data: recent.map(r => r.cachedTokens), borderColor: 'hsl(38 92% 50%)', fill: true, backgroundColor: 'hsl(38 92% 50% / 0.06)', tension: 0.4, borderWidth: 2 }
             ]
           },
           options: {
             responsive: true,
-            plugins: { legend: { labels: { color: '#475569', font: { family: 'Inter' } } } },
+            plugins: { legend: { display: false } },
             scales: {
               x: { display: false },
-              y: { ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono' } }, grid: { color: '#f1f5f9' } }
+              y: { ticks: { color: 'hsl(215 16% 57%)', font: { family: 'JetBrains Mono', size: 11 } }, grid: { color: 'hsl(214 32% 93%)', drawBorder: false } }
+            },
+            elements: {
+              point: { radius: 0, hoverRadius: 6, hoverBorderWidth: 2 }
             }
           }
         })
+
+        // Custom legend
+        document.getElementById('token-legend').innerHTML = `
+          <div class="chart-legend-item"><div class="chart-legend-dot" style="background:hsl(183 100% 40%)"></div>Input</div>
+          <div class="chart-legend-item"><div class="chart-legend-dot" style="background:hsl(160 84% 39%)"></div>Output</div>
+          <div class="chart-legend-item"><div class="chart-legend-dot" style="background:hsl(38 92% 50%)"></div>Cached</div>
+        `
       }
 
       // Tool usage chart
@@ -652,14 +1237,14 @@
           type: 'bar',
           data: {
             labels: toolLabels,
-            datasets: [{ label: 'Calls', data: toolValues, backgroundColor: '#6366f1', borderRadius: 6 }]
+            datasets: [{ label: 'Calls', data: toolValues, backgroundColor: 'hsl(183 100% 40%)', borderRadius: 6, borderSkipped: false }]
           },
           options: {
             responsive: true,
             plugins: { legend: { display: false } },
             scales: {
-              x: { ticks: { color: '#94a3b8', font: { family: 'Inter' } }, grid: { display: false } },
-              y: { ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono' } }, grid: { color: '#f1f5f9' } }
+              x: { ticks: { color: 'hsl(215 16% 57%)', font: { family: 'Inter', size: 11 } }, grid: { display: false } },
+              y: { ticks: { color: 'hsl(215 16% 57%)', font: { family: 'JetBrains Mono', size: 11 } }, grid: { color: 'hsl(214 32% 93%)', drawBorder: false } }
             }
           }
         })
@@ -680,7 +1265,7 @@
           <td>${formatTime(r.timestamp)}</td>
         </tr>
       `).join('')
-      document.getElementById('tokens-table').innerHTML = rows || '<tr><td colspan="7" class="empty-state">No data yet</td></tr>'
+      document.getElementById('tokens-table').innerHTML = rows || '<tr><td colspan="7"><div class="empty-state"><div class="empty-state-icon">' + icons.activity + '</div><div class="empty-state-title">No data yet</div><div class="empty-state-desc">Token usage will appear here after tool calls</div></div></td></tr>'
     }
 
     // Compress page
@@ -688,7 +1273,6 @@
       const data = await loadStats()
       const s = data.summary
 
-      // Group by tool for compression chart
       const toolData = {}
       data.requests.forEach(r => {
         if (!toolData[r.tool]) toolData[r.tool] = []
@@ -702,15 +1286,18 @@
 
       document.getElementById('compress-cards').innerHTML = `
         <div class="card">
-          <div class="card-label">${icons.compress} Avg Compression</div>
+          <div class="card-icon success">${icons.compress}</div>
+          <div class="card-label">Avg Compression</div>
           <div class="card-value success">${(s.avgCompression * 100).toFixed(0)}%</div>
         </div>
         <div class="card">
-          <div class="card-label">${icons.file} Total Savings</div>
+          <div class="card-icon">${icons.file}</div>
+          <div class="card-label">Total Savings</div>
           <div class="card-value">${formatTokens(data.requests.reduce((a, r) => a + r.savings, 0))}</div>
         </div>
         <div class="card">
-          <div class="card-label">${icons.zap} Tools Used</div>
+          <div class="card-icon accent">${icons.zap}</div>
+          <div class="card-label">Tools Used</div>
           <div class="card-value">${Object.keys(s.toolUsage).length}</div>
         </div>
       `
@@ -723,16 +1310,17 @@
             datasets: [{
               label: 'Compression %',
               data: avgByTool.map(d => (d.avg * 100).toFixed(0)),
-              backgroundColor: '#22c55e',
-              borderRadius: 6
+              backgroundColor: 'hsl(160 84% 39%)',
+              borderRadius: 6,
+              borderSkipped: false
             }]
           },
           options: {
             responsive: true,
             plugins: { legend: { display: false } },
             scales: {
-              x: { ticks: { color: '#94a3b8', font: { family: 'Inter' } }, grid: { display: false } },
-              y: { ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono' } }, grid: { color: '#f1f5f9' }, max: 100 }
+              x: { ticks: { color: 'hsl(215 16% 57%)', font: { family: 'Inter', size: 11 } }, grid: { display: false } },
+              y: { ticks: { color: 'hsl(215 16% 57%)', font: { family: 'JetBrains Mono', size: 11 } }, grid: { color: 'hsl(214 32% 93%)', drawBorder: false }, max: 100 }
             }
           }
         })
@@ -745,11 +1333,13 @@
 
       document.getElementById('learn-cards').innerHTML = `
         <div class="card">
-          <div class="card-label">${icons.brain} Patterns</div>
+          <div class="card-icon accent">${icons.brain}</div>
+          <div class="card-label">Patterns</div>
           <div class="card-value">${patterns.patterns?.length || 0}</div>
         </div>
         <div class="card">
-          <div class="card-label">${icons.alert} Failures</div>
+          <div class="card-icon danger">${icons.alert}</div>
+          <div class="card-label">Failures</div>
           <div class="card-value danger">${failures.failures?.length || 0}</div>
         </div>
       `
@@ -758,24 +1348,30 @@
       if (patterns.patterns?.length > 0) {
         patternsList.innerHTML = patterns.patterns.map(p => `
           <div class="list-item">
-            <div class="list-item-title">${p.type}</div>
-            <div class="list-item-meta">Confidence: ${(p.confidence * 100).toFixed(0)}% | Count: ${p.count || 1}</div>
+            <div class="list-item-icon pattern">${icons.brain}</div>
+            <div class="list-item-content">
+              <div class="list-item-title">${p.type}</div>
+              <div class="list-item-meta">Confidence: ${(p.confidence * 100).toFixed(0)}% | Count: ${p.count || 1}</div>
+            </div>
           </div>
         `).join('')
       } else {
-        patternsList.innerHTML = '<div class="empty-state">No patterns recorded yet</div>'
+        patternsList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">' + icons.brain + '</div><div class="empty-state-title">No patterns yet</div><div class="empty-state-desc">Patterns will be learned from your usage</div></div>'
       }
 
       const failuresList = document.getElementById('failures-list')
       if (failures.failures?.length > 0) {
         failuresList.innerHTML = failures.failures.map(f => `
           <div class="list-item">
-            <div class="list-item-title">${f.type}</div>
-            <div class="list-item-meta">${f.error} | ${f.suggestions?.[0] || 'No suggestions'}</div>
+            <div class="list-item-icon failure">${icons.alert}</div>
+            <div class="list-item-content">
+              <div class="list-item-title">${f.type}</div>
+              <div class="list-item-meta">${f.error} | ${f.suggestions?.[0] || 'No suggestions'}</div>
+            </div>
           </div>
         `).join('')
       } else {
-        failuresList.innerHTML = '<div class="empty-state">No failures recorded yet</div>'
+        failuresList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">' + icons.check + '</div><div class="empty-state-title">No failures</div><div class="empty-state-desc">Everything is running smoothly</div></div>'
       }
     }
 
@@ -786,29 +1382,38 @@
 
       document.getElementById('cache-cards').innerHTML = `
         <div class="card">
-          <div class="card-label">${icons.cache} Cached Tokens</div>
+          <div class="card-icon success">${icons.cache}</div>
+          <div class="card-label">Cached Tokens</div>
           <div class="card-value success">${formatTokens(s.totalCachedTokens)}</div>
         </div>
         <div class="card">
-          <div class="card-label">${icons.zap} Cache Rate</div>
+          <div class="card-icon accent">${icons.zap}</div>
+          <div class="card-label">Cache Rate</div>
           <div class="card-value">${s.totalRequests > 0 ? ((s.totalCachedTokens / (s.totalInputTokens + s.totalCachedTokens)) * 100).toFixed(0) : 0}%</div>
         </div>
         <div class="card">
-          <div class="card-label">${icons.file} Total Input</div>
+          <div class="card-icon">${icons.file}</div>
+          <div class="card-label">Total Input</div>
           <div class="card-value">${formatTokens(s.totalInputTokens)}</div>
         </div>
       `
     }
 
     // Graph page
+    let currentZoom = null
+
     async function renderGraph() {
       const graph = await loadGraph()
       const container = document.getElementById('graph-container')
 
+      const controls = container.querySelector('.graph-controls')
+      const tooltip = container.querySelector('.graph-tooltip')
       container.innerHTML = ''
+      container.appendChild(controls)
+      container.appendChild(tooltip)
 
       if (graph.nodes.length === 0) {
-        container.innerHTML = `<div class="empty-state">${icons.link}<div>No graph data yet. Run build-graph to generate.</div></div>`
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">' + icons.graph + '</div><div class="empty-state-title">No graph data</div><div class="empty-state-desc">Run build-graph to generate code visualization</div></div>'
         return
       }
 
@@ -818,21 +1423,63 @@
       const svg = d3.select('#graph-container').append('svg')
         .attr('width', width).attr('height', height)
 
-      const simulation = d3.forceSimulation(graph.nodes)
-        .force('link', d3.forceLink(graph.edges).id(d => d.id).distance(100))
-        .force('charge', d3.forceManyBody().strength(-200))
-        .force('center', d3.forceCenter(width / 2, height / 2))
+      const g = svg.append('g')
 
-      const link = svg.append('g').selectAll('line')
+      const zoom = d3.zoom()
+        .scaleExtent([0.1, 4])
+        .on('zoom', (event) => {
+          g.attr('transform', event.transform)
+        })
+
+      svg.call(zoom)
+      currentZoom = zoom
+
+      document.getElementById('zoom-in').onclick = () => {
+        svg.transition().duration(300).call(zoom.scaleBy, 1.3)
+      }
+      document.getElementById('zoom-out').onclick = () => {
+        svg.transition().duration(300).call(zoom.scaleBy, 0.7)
+      }
+      document.getElementById('zoom-reset').onclick = () => {
+        svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity)
+      }
+
+      const degree = {}
+      graph.edges.forEach(e => {
+        degree[e.source] = (degree[e.source] || 0) + 1
+        degree[e.target] = (degree[e.target] || 0) + 1
+      })
+
+      const simulation = d3.forceSimulation(graph.nodes)
+        .force('link', d3.forceLink(graph.edges).id(d => d.id).distance(d => {
+          const sourceDeg = degree[d.source.id] || 1
+          const targetDeg = degree[d.target.id] || 1
+          return 80 + Math.min(sourceDeg + targetDeg, 10) * 15
+        }))
+        .force('charge', d3.forceManyBody().strength(-300))
+        .force('center', d3.forceCenter(width / 2, height / 2))
+        .force('collision', d3.forceCollide().radius(d => {
+          const baseRadius = d.type === 'file' ? 12 : d.type === 'class' ? 10 : d.type === 'function' ? 8 : 7
+          const degBonus = Math.min((degree[d.id] || 0) * 2, 12)
+          return baseRadius + degBonus + 18
+        }))
+        .force('x', d3.forceX(width / 2).strength(0.05))
+        .force('y', d3.forceY(height / 2).strength(0.05))
+
+      const link = g.append('g').selectAll('line')
         .data(graph.edges).enter().append('line')
         .attr('class', 'graph-link')
 
-      const node = svg.append('g').selectAll('circle')
+      const node = g.append('g').selectAll('circle')
         .data(graph.nodes).enter().append('circle')
         .attr('class', 'graph-node')
-        .attr('r', d => d.type === 'file' ? 8 : 5)
+        .attr('r', d => {
+          const baseRadius = d.type === 'file' ? 12 : d.type === 'class' ? 10 : d.type === 'function' ? 8 : 7
+          const degBonus = Math.min((degree[d.id] || 0) * 1.5, 10)
+          return baseRadius + degBonus
+        })
         .attr('fill', d => {
-          const colors = { file: '#6366f1', function: '#22c55e', class: '#f59e0b', method: '#ef4444', import: '#94a3b8' }
+          const colors = { file: 'hsl(183 100% 40%)', function: 'hsl(160 84% 39%)', class: 'hsl(38 92% 50%)', method: 'hsl(0 84% 60%)', import: 'hsl(215 16% 57%)' }
           return colors[d.type] || '#94a3b8'
         })
         .call(d3.drag()
@@ -841,11 +1488,72 @@
           .on('end', (event, d) => { if (!event.active) simulation.alphaTarget(0); d.fx = null; d.fy = null })
         )
 
-      const label = svg.append('g').selectAll('text')
+      const label = g.append('g').selectAll('text')
         .data(graph.nodes).enter().append('text')
         .attr('class', 'graph-label')
-        .attr('dx', 12).attr('dy', 4)
+        .attr('dx', d => {
+          const baseRadius = d.type === 'file' ? 12 : d.type === 'class' ? 10 : 8
+          const degBonus = Math.min((degree[d.id] || 0) * 1.5, 10)
+          return baseRadius + degBonus + 5
+        })
+        .attr('dy', 4)
         .text(d => d.name.split('/').pop())
+
+      // Tooltip
+      const tooltipEl = document.getElementById('graph-tooltip')
+      const tooltipIcon = document.getElementById('tooltip-icon')
+      const tooltipTitle = document.getElementById('tooltip-title')
+      const tooltipType = document.getElementById('tooltip-type')
+      const tooltipMeta = document.getElementById('tooltip-meta')
+
+      const typeColors = { file: 'hsl(183 100% 40%)', function: 'hsl(160 84% 39%)', class: 'hsl(38 92% 50%)', method: 'hsl(0 84% 60%)', import: 'hsl(215 16% 57%)' }
+      const typeBgs = { file: 'hsl(183 60% 94%)', function: 'hsl(152 76% 95%)', class: 'hsl(48 96% 95%)', method: 'hsl(0 86% 97%)', import: 'hsl(214 32% 95%)' }
+      const typeIcons = { file: icons.file, function: icons.zap, class: icons.brain, method: icons.activity, import: icons.link }
+
+      node.on('click', (event, d) => {
+        event.stopPropagation()
+
+        node.classed('selected', false)
+        link.classed('highlighted', false)
+
+        d3.select(event.currentTarget).classed('selected', true)
+        link.classed('highlighted', l => l.source.id === d.id || l.target.id === d.id)
+
+        const deg = degree[d.id] || 0
+        const incoming = graph.edges.filter(e => e.target === d.id).length
+        const outgoing = graph.edges.filter(e => e.source === d.id).length
+
+        tooltipIcon.innerHTML = typeIcons[d.type] || icons.file
+        tooltipIcon.style.background = typeBgs[d.type] || '#f1f5f9'
+        tooltipIcon.style.color = typeColors[d.type] || '#94a3b8'
+
+        tooltipTitle.textContent = d.name
+        tooltipType.textContent = d.type
+        tooltipType.style.background = typeBgs[d.type] || '#f1f5f9'
+        tooltipType.style.color = typeColors[d.type] || '#94a3b8'
+
+        tooltipMeta.innerHTML = `
+          <div><span>Connections</span><span>${deg}</span></div>
+          <div><span>Incoming</span><span>${incoming}</span></div>
+          <div><span>Outgoing</span><span>${outgoing}</span></div>
+          ${d.filePath ? `<div><span>File</span><span style="font-family: var(--font-mono); font-size: 11px;">${d.filePath.split('/').pop()}</span></div>` : ''}
+          ${d.line ? `<div><span>Line</span><span>${d.line}</span></div>` : ''}
+        `
+
+        const containerRect = container.getBoundingClientRect()
+        const x = event.clientX - containerRect.left
+        const y = event.clientY - containerRect.top
+
+        tooltipEl.style.left = Math.min(x + 20, width - 340) + 'px'
+        tooltipEl.style.top = Math.max(y - 10, 10) + 'px'
+        tooltipEl.classList.add('visible')
+      })
+
+      svg.on('click', () => {
+        tooltipEl.classList.remove('visible')
+        node.classed('selected', false)
+        link.classed('highlighted', false)
+      })
 
       simulation.on('tick', () => {
         link.attr('x1', d => d.source.x).attr('y1', d => d.source.y)
@@ -866,7 +1574,7 @@
           <td>${formatTokens(r.inputTokens + r.outputTokens)}</td>
         </tr>
       `).join('')
-      document.getElementById('activity-table').innerHTML = rows || '<tr><td colspan="4" class="empty-state">No activity yet</td></tr>'
+      document.getElementById('activity-table').innerHTML = rows || '<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">' + icons.activity + '</div><div class="empty-state-title">No activity</div><div class="empty-state-desc">Activity will appear here after tool calls</div></div></td></tr>'
     }
 
     // Init
@@ -877,6 +1585,17 @@
     renderCache()
     renderGraph()
     renderActivity()
+
+    // Re-render graph on resize
+    let resizeTimer
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(() => {
+        if (document.getElementById('page-graph').classList.contains('active')) {
+          renderGraph()
+        }
+      }, 250)
+    })
   </script>
 </body>
 </html>
