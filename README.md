@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/make-laten.svg)](https://www.npmjs.com/package/make-laten)
 [![license](https://img.shields.io/npm/l/make-laten.svg)](https://github.com/sukirman1901/make-laten/blob/main/LICENSE)
-[![tests](https://img.shields.io/badge/tests-223%20passing-brightgreen)]()
+[![tests](https://img.shields.io/badge/tests-282%20passing-brightgreen)]()
 
 Universal efficiency toolkit for AI coding agents — compress, cache, learn, and optimize token usage across all platforms.
 
@@ -220,6 +220,25 @@ npx make-laten query --type impact --symbol AuthService
 | `path` | Find shortest path between two symbols |
 | `impact` | Analyze what breaks if symbol changes |
 | `code-search` | Search symbols in code graph |
+
+## Dashboard
+
+Visual dashboard for token usage, compression stats, and code graph.
+
+```bash
+make-laten dashboard        # open in browser
+make-laten dashboard --port 8080  # custom port
+make-laten stats            # quick text stats
+```
+
+### Features
+- Overview: total requests, tokens, cost, compression
+- Tokens: per-request table with model, input/output, timestamp
+- Compress: per-tool compression ratios
+- Learn: patterns, failures, corrections
+- Cache: hit rate, cache size
+- Graph: interactive force-directed code graph
+- Activity: request timeline, error log
 
 ## Supported Agents
 

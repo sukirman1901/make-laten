@@ -19,10 +19,13 @@ import { QueryEngine } from '../code-intel/query-engine.js'
 import { ImpactAnalyzer } from '../code-intel/impact-analyzer.js'
 import { GraphStorage } from '../code-intel/storage.js'
 import type { Graph } from '../code-intel/graph-builder.js'
+import { StatsCollector } from '../stats/collector.js'
 import { exec } from 'child_process'
 import { promisify } from 'util'
 import fs from 'fs/promises'
 import { statSync } from 'fs'
+import path from 'path'
+import os from 'os'
 
 const execAsync = promisify(exec)
 
@@ -42,6 +45,10 @@ const queryEngine = new QueryEngine()
 const impactAnalyzer = new ImpactAnalyzer()
 const graphStorage = new GraphStorage()
 let currentGraph: Graph = { nodes: [], edges: [] }
+
+const statsCollector = new StatsCollector({
+  filePath: path.join(os.homedir(), '.make-laten', 'stats.json')
+})
 
 const TOOLS = [
   // Compress Layer
@@ -638,6 +645,30 @@ const handlers: Record<string, (params: any) => Promise<any>> = {
   'build-graph': handleBuildGraph
 }
 
+async function logToolCall(tool: string, params: any, result: any, startMs: number) {
+  const duration = Date.now() - startMs
+  const outputText = result?.content?.[0]?.text || ''
+  const inputText = JSON.stringify(params)
+
+  const inputTokens = Math.ceil(inputText.length / 4)
+  const outputTokens = Math.ceil(outputText.length / 4)
+  const cachedTokens = result?.metadata?.cached ? inputTokens : 0
+
+  const savings = result?.savings || 0
+  const compressionRatio = savings > 0 ? savings / (inputTokens + outputTokens + savings) : 0
+
+  await statsCollector.log({
+    tool,
+    inputTokens,
+    outputTokens,
+    cachedTokens,
+    compressionRatio,
+    savings,
+    model: 'mimo-v2.5',
+    success: !result?.isError
+  })
+}
+
 let requestId = 0
 
 function sendResponse(id: number, result: any) {
@@ -658,7 +689,7 @@ async function handleLine(line: string) {
       sendResponse(request.id, {
         protocolVersion: '2024-11-05',
         capabilities: { tools: {} },
-        serverInfo: { name: 'make-laten', version: '1.4.0' }
+        serverInfo: { name: 'make-laten', version: '1.4.2' }
       })
     } else if (request.method === 'notifications/initialized') {
       // no response needed
@@ -674,7 +705,9 @@ async function handleLine(line: string) {
       }
 
       try {
+        const startMs = Date.now()
         const result = await handler(params || {})
+        await logToolCall(name, params, result, startMs)
         sendResponse(request.id, result)
       } catch (error: any) {
         failureLearner.record({ type: name, error: error.message, context: { tool: name } })

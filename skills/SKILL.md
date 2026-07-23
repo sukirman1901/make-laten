@@ -64,6 +64,13 @@ Universal efficiency toolkit that compresses outputs to save tokens. Use CLI com
 | After compress | → cache result (auto) |
 | Cache hit | → return cached (auto) |
 
+### Dashboard & Stats
+| User Says | Agent Does |
+|-----------|------------|
+| "show stats", "dashboard", "open dashboard" | → make-laten dashboard |
+| "how many tokens", "token usage" | → make-laten stats |
+| "lihat statistik", "buka dashboard" | → make-laten dashboard |
+
 ## Anti-Patterns (NEVER do this)
 - Do NOT use Read tool for files > 100 lines
 - Do NOT use raw grep for code search
@@ -161,6 +168,13 @@ make-laten fetch <url>
 ```bash
 make-laten cache stats
 make-laten cache clear
+```
+
+### Dashboard & Stats
+```bash
+make-laten dashboard              # open visual dashboard in browser
+make-laten dashboard --port 8080  # custom port
+make-laten stats                  # quick text stats
 ```
 
 ## Benchmark Results (v1.4.0)

@@ -9,13 +9,15 @@ import { searchCommand, fetchCommand } from './commands/web.js'
 import { installCommand } from './commands/install.js'
 import { initCommand } from './commands/init.js'
 import { benchmarkCommand } from './commands/benchmark.js'
+import { dashboardCommand } from './commands/dashboard.js'
+import { statsCommand } from './commands/stats.js'
 
 const program = new Command()
 
 program
   .name('make-laten')
   .description('Universal efficiency toolkit for AI coding agents')
-  .version('1.3.6')
+  .version('1.5.0')
 
 program
   .command('read')
@@ -103,5 +105,8 @@ program
   .command('benchmark')
   .description('Compare raw vs compressed output')
   .action(benchmarkCommand)
+
+program.addCommand(dashboardCommand)
+program.addCommand(statsCommand)
 
 program.parse()
