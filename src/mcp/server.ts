@@ -36,7 +36,7 @@ const TOOLS = [
   // Compress Layer
   {
     name: 'make-laten-read',
-    description: 'Read and compress a file (65-92% token savings)',
+    description: 'Read files with 85% token savings — use INSTEAD of Read tool',
     inputSchema: {
       type: 'object',
       properties: {
@@ -47,7 +47,7 @@ const TOOLS = [
   },
   {
     name: 'make-laten-read-detail',
-    description: 'Zero-loss file detail by symbol or line range (use after make-laten-read overview)',
+    description: 'Expand zero-loss detail from overview — use AFTER make-laten-read',
     inputSchema: {
       type: 'object',
       properties: {
@@ -62,7 +62,7 @@ const TOOLS = [
   },
   {
     name: 'make-laten-grep',
-    description: 'Search code and return compressed grouped results',
+    description: 'Search code grouped by file — use INSTEAD of grep/rg command',
     inputSchema: {
       type: 'object',
       properties: {
@@ -74,7 +74,7 @@ const TOOLS = [
   },
   {
     name: 'make-laten-git-diff',
-    description: 'Compressed git diff output',
+    description: 'Show git changes with 85% savings — use INSTEAD of git diff',
     inputSchema: {
       type: 'object',
       properties: {
@@ -84,14 +84,14 @@ const TOOLS = [
   },
   {
     name: 'make-laten-git-status',
-    description: 'Compressed git status',
+    description: 'Show git status grouped by type — use INSTEAD of git status',
     inputSchema: { type: 'object', properties: {} }
   },
 
   // Route Layer
   {
     name: 'make-laten-route',
-    description: 'Route input to correct compressor',
+    description: 'Route input to best compressor — use when unsure which tool',
     inputSchema: {
       type: 'object',
       properties: {
@@ -103,7 +103,7 @@ const TOOLS = [
   },
   {
     name: 'make-laten-strategy',
-    description: 'Select compression strategy based on context',
+    description: 'Pick compression level — conservative/balanced/aggressive',
     inputSchema: {
       type: 'object',
       properties: {
@@ -116,12 +116,12 @@ const TOOLS = [
   // Cache Layer
   {
     name: 'make-laten-cache-stats',
-    description: 'Show cache performance stats',
+    description: 'Show cache hit rate — check if caching helps',
     inputSchema: { type: 'object', properties: {} }
   },
   {
     name: 'make-laten-cache-get',
-    description: 'Get value from session cache',
+    description: 'Get cached value — faster than re-computing',
     inputSchema: {
       type: 'object',
       properties: {
@@ -132,7 +132,7 @@ const TOOLS = [
   },
   {
     name: 'make-laten-cache-set',
-    description: 'Set value in session cache',
+    description: 'Cache result for session — save tokens on repeat',
     inputSchema: {
       type: 'object',
       properties: {
@@ -144,24 +144,24 @@ const TOOLS = [
   },
   {
     name: 'make-laten-cache-clear',
-    description: 'Clear session cache',
+    description: 'Clear session cache — fresh start',
     inputSchema: { type: 'object', properties: {} }
   },
 
   // Learn Layer
   {
     name: 'make-laten-patterns',
-    description: 'Get learned patterns from usage (persisted across sessions)',
+    description: 'Show learned patterns — check what works',
     inputSchema: { type: 'object', properties: {} }
   },
   {
     name: 'make-laten-failures',
-    description: 'Get failure records and suggestions (persisted across sessions)',
+    description: 'Show failure records — learn from mistakes',
     inputSchema: { type: 'object', properties: {} }
   },
   {
     name: 'make-laten-suggestions',
-    description: 'Get suggestions based on learned patterns and failures',
+    description: 'Get smart suggestions — based on patterns',
     inputSchema: {
       type: 'object',
       properties: {
@@ -173,7 +173,7 @@ const TOOLS = [
   // Correct Layer
   {
     name: 'make-laten-correct',
-    description: 'Apply auto-corrections to text (11 built-in rules + custom rules)',
+    description: 'Fix typos in text — use before sending',
     inputSchema: {
       type: 'object',
       properties: {
@@ -186,7 +186,7 @@ const TOOLS = [
   // Web Layer
   {
     name: 'make-laten-search',
-    description: 'Search the web with semantic understanding',
+    description: 'Web search with compression — use INSTEAD of websearch',
     inputSchema: {
       type: 'object',
       properties: {
@@ -198,7 +198,7 @@ const TOOLS = [
   },
   {
     name: 'make-laten-fetch',
-    description: 'Fetch and compress web content',
+    description: 'Fetch URL with 75% savings — use INSTEAD of webfetch',
     inputSchema: {
       type: 'object',
       properties: {
@@ -212,7 +212,7 @@ const TOOLS = [
   // Tool Layer
   {
     name: 'make-laten-tools',
-    description: 'List available make-laten tools',
+    description: 'List all make-laten tools — check what\'s available',
     inputSchema: { type: 'object', properties: {} }
   }
 ]
