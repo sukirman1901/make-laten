@@ -3,4 +3,4 @@ dist/
 *.db
 .env
 tests/
-docs/
+docs/.worktrees/
