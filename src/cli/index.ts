@@ -15,7 +15,7 @@ const program = new Command()
 program
   .name('make-laten')
   .description('Universal efficiency toolkit for AI coding agents')
-  .version('1.3.2')
+  .version('1.3.3')
 
 program
   .command('read')
