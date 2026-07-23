@@ -14,6 +14,11 @@ import { AutoCorrect } from '../correct/auto-correct.js'
 import { SessionCache } from '../cache/l1-session.js'
 import { WebRouter } from '../web/router.js'
 import { SemanticTool } from '../tool/semantic-tool.js'
+import { IncrementalBuilder } from '../code-intel/incremental.js'
+import { QueryEngine } from '../code-intel/query-engine.js'
+import { ImpactAnalyzer } from '../code-intel/impact-analyzer.js'
+import { GraphStorage } from '../code-intel/storage.js'
+import type { Graph } from '../code-intel/graph-builder.js'
 import { exec } from 'child_process'
 import { promisify } from 'util'
 import fs from 'fs/promises'
@@ -31,6 +36,12 @@ const patternMiner = new PatternMiner()
 const failureLearner = new FailureLearner()
 const autoCorrect = new AutoCorrect()
 const webRouter = new WebRouter()
+
+const incrementalBuilder = new IncrementalBuilder()
+const queryEngine = new QueryEngine()
+const impactAnalyzer = new ImpactAnalyzer()
+const graphStorage = new GraphStorage()
+let currentGraph: Graph = { nodes: [], edges: [] }
 
 const TOOLS = [
   // Compress Layer
@@ -515,29 +526,62 @@ async function handleTools() {
   return { content: [{ type: 'text', text: JSON.stringify({ tools, total: tools.length }) }] }
 }
 
-// Code Intel handlers (placeholder — wired in Task 9)
+// Code Intel handlers (wired to actual components)
 async function handleQuery(params: { type: string; symbol?: string; source?: string; target?: string; query?: string }) {
-  return { content: [{ type: 'text', text: JSON.stringify({ error: 'Query engine not yet connected' }) }] }
+  const { type, symbol, source, target, query } = params
+  switch (type) {
+    case 'explain': {
+      const result = await queryEngine.explain(symbol!, currentGraph)
+      return { content: [{ type: 'text', text: JSON.stringify(result || { error: `Symbol '${symbol}' not found` }) }] }
+    }
+    case 'path': {
+      const result = await queryEngine.path(source!, target!, currentGraph)
+      return { content: [{ type: 'text', text: JSON.stringify(result || { error: `No path from '${source}' to '${target}'` }) }] }
+    }
+    case 'search': {
+      const results = await queryEngine.search(query!, currentGraph)
+      return { content: [{ type: 'text', text: JSON.stringify({ results, total: results.length }) }] }
+    }
+    case 'impact': {
+      const result = await impactAnalyzer.analyze(symbol!, currentGraph)
+      return { content: [{ type: 'text', text: JSON.stringify(result) }] }
+    }
+    default:
+      return { content: [{ type: 'text', text: JSON.stringify({ error: `Unknown query type: ${type}` }) }] }
+  }
 }
 
 async function handleExplain(params: { symbol: string }) {
-  return { content: [{ type: 'text', text: JSON.stringify({ error: 'Explain not yet connected' }) }] }
+  const result = await queryEngine.explain(params.symbol, currentGraph)
+  return { content: [{ type: 'text', text: JSON.stringify(result || { error: `Symbol '${params.symbol}' not found` }) }] }
 }
 
 async function handlePath(params: { source: string; target: string }) {
-  return { content: [{ type: 'text', text: JSON.stringify({ error: 'Path not yet connected' }) }] }
+  const result = await queryEngine.path(params.source, params.target, currentGraph)
+  return { content: [{ type: 'text', text: JSON.stringify(result || { error: `No path from '${params.source}' to '${params.target}'` }) }] }
 }
 
 async function handleImpact(params: { symbol: string }) {
-  return { content: [{ type: 'text', text: JSON.stringify({ error: 'Impact not yet connected' }) }] }
+  const result = await impactAnalyzer.analyze(params.symbol, currentGraph)
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] }
 }
 
 async function handleCodeSearch(params: { query: string }) {
-  return { content: [{ type: 'text', text: JSON.stringify({ error: 'Search not yet connected' }) }] }
+  const results = await queryEngine.search(params.query, currentGraph)
+  return { content: [{ type: 'text', text: JSON.stringify({ results, total: results.length }) }] }
 }
 
 async function handleBuildGraph(params: { path?: string; update?: boolean }) {
-  return { content: [{ type: 'text', text: JSON.stringify({ error: 'Build graph not yet connected' }) }] }
+  const dirPath = params.path || '.'
+  if (params.update) {
+    currentGraph = await incrementalBuilder.updateDirectory(dirPath, [])
+  } else {
+    currentGraph = await incrementalBuilder.buildDirectory(dirPath)
+  }
+  const storagePath = require('path').join(dirPath, '.make-laten', 'graph.json')
+  await require('fs/promises').mkdir(require('path').dirname(storagePath), { recursive: true })
+  await graphStorage.save(currentGraph, storagePath)
+  return { content: [{ type: 'text', text: JSON.stringify({ nodes: currentGraph.nodes.length, edges: currentGraph.edges.length, saved: storagePath }) }] }
 }
 
 const handlers: Record<string, (params: any) => Promise<any>> = {
