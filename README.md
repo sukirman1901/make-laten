@@ -32,14 +32,17 @@ User → AI Agent → make-laten intercept → compress → learn → cache → 
 npx make-laten init --all
 ```
 
-This auto-detects your installed AI agents and configures MCP for each one.
+This auto-detects your installed AI agents and configures MCP + platform-specific configs (CLAUDE.md, .cursorrules, AGENTS.md, GEMINI.md).
 
-**Or install globally first:**
+**What gets configured:**
 
-```bash
-npm install -g make-laten
-make-laten init --all
-```
+| Platform | Config File | What It Does |
+|----------|-------------|--------------|
+| Claude Code | CLAUDE.md | "Use make-laten INSTEAD of Read tool" |
+| Cursor | .cursorrules | "Use make-laten MCP tools for all operations" |
+| Codex | AGENTS.md | Agent instructions for make-laten |
+| Gemini | GEMINI.md | Tool usage guidelines |
+| opencode | SKILL.md | Auto-loaded skill |
 
 ## Setup Options
 
