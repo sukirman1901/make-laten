@@ -689,7 +689,7 @@ async function handleLine(line: string) {
       sendResponse(request.id, {
         protocolVersion: '2024-11-05',
         capabilities: { tools: {} },
-        serverInfo: { name: 'make-laten', version: '1.4.2' }
+        serverInfo: { name: 'make-laten', version: '1.5.1' }
       })
     } else if (request.method === 'notifications/initialized') {
       // no response needed

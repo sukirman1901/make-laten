@@ -3,40 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>make-laten dashboard</title>
+  <title>make-laten</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
   <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-primary: #0a0a0f;
-      --bg-secondary: #12121a;
-      --bg-card: rgba(20, 20, 30, 0.8);
-      --bg-card-hover: rgba(25, 25, 40, 0.9);
-      --border: rgba(255, 255, 255, 0.06);
-      --border-focus: rgba(99, 102, 241, 0.5);
-      --text-primary: #e4e4e7;
-      --text-secondary: #a1a1aa;
-      --text-muted: #71717a;
+      --bg-primary: #fafafa;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f8fafc;
+      --border: #e2e8f0;
+      --border-light: #f1f5f9;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
       --accent: #6366f1;
-      --accent-hover: #818cf8;
-      --accent-glow: rgba(99, 102, 241, 0.2);
+      --accent-light: #eef2ff;
+      --accent-hover: #4f46e5;
       --success: #22c55e;
-      --success-glow: rgba(34, 197, 94, 0.2);
-      --warning: #eab308;
-      --warning-glow: rgba(234, 179, 8, 0.2);
+      --success-light: #f0fdf4;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
       --danger: #ef4444;
-      --danger-glow: rgba(239, 68, 68, 0.2);
+      --danger-light: #fef2f2;
       --radius: 12px;
       --radius-sm: 8px;
       --radius-lg: 16px;
-      --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
-      --shadow-glow: 0 0 20px var(--accent-glow);
-      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-fast: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
       --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
     }
@@ -48,13 +48,14 @@
       background: var(--bg-primary);
       color: var(--text-primary);
       min-height: 100vh;
-      line-height: 1.5;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* Layout */
     .app {
       display: grid;
-      grid-template-columns: 240px 1fr;
+      grid-template-columns: 220px 1fr;
       min-height: 100vh;
     }
 
@@ -62,10 +63,10 @@
     .sidebar {
       background: var(--bg-secondary);
       border-right: 1px solid var(--border);
-      padding: 24px 16px;
+      padding: 20px 12px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 4px;
       position: sticky;
       top: 0;
       height: 100vh;
@@ -73,20 +74,25 @@
     }
 
     .sidebar-logo {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 700;
-      padding: 0 12px 24px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 16px;
+      padding: 8px 12px 20px;
+      border-bottom: 1px solid var(--border-light);
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
       gap: 8px;
+      letter-spacing: -0.02em;
     }
 
-    .sidebar-logo span { color: var(--accent); }
+    .sidebar-logo svg {
+      width: 20px;
+      height: 20px;
+      color: var(--accent);
+    }
 
     .nav-item {
-      padding: 10px 12px;
+      padding: 8px 12px;
       border-radius: var(--radius-sm);
       cursor: pointer;
       transition: var(--transition);
@@ -94,14 +100,20 @@
       align-items: center;
       gap: 10px;
       color: var(--text-secondary);
-      font-size: 14px;
+      font-size: 13.5px;
+      font-weight: 450;
       border: 1px solid transparent;
     }
 
+    .nav-item svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
     .nav-item:hover {
-      background: var(--bg-card);
+      background: var(--bg-card-hover);
       color: var(--text-primary);
-      border-color: var(--border);
     }
 
     .nav-item:focus-visible {
@@ -110,25 +122,34 @@
     }
 
     .nav-item.active {
-      background: var(--accent-glow);
+      background: var(--accent-light);
       color: var(--accent);
-      border-color: var(--border-focus);
+      font-weight: 500;
     }
 
     /* Main */
     .main {
-      padding: 32px;
+      padding: 32px 40px;
       overflow-y: auto;
+      max-width: 1200px;
     }
 
     .page { display: none; }
     .page.active { display: block; }
 
+    .page-title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+      color: var(--text-primary);
+    }
+
     /* Cards */
     .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
       margin-bottom: 32px;
     }
 
@@ -137,32 +158,38 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 20px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
       transition: var(--transition);
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-sm);
     }
 
     .card:hover {
-      background: var(--bg-card-hover);
-      box-shadow: var(--shadow-lg);
-      transform: translateY(-2px);
-      border-color: var(--border-focus);
+      box-shadow: var(--shadow-md);
+      border-color: #cbd5e1;
     }
 
     .card-label {
       font-size: 12px;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.05em;
       margin-bottom: 8px;
       font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-label svg {
+      width: 14px;
+      height: 14px;
     }
 
     .card-value {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 700;
       font-family: var(--font-mono);
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
     }
 
     .card-value.accent { color: var(--accent); }
@@ -177,15 +204,15 @@
       border-radius: var(--radius);
       padding: 24px;
       margin-bottom: 24px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-sm);
     }
 
     .chart-title {
       font-size: 14px;
       font-weight: 600;
       margin-bottom: 16px;
-      color: var(--text-secondary);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
     }
 
     /* Table */
@@ -194,8 +221,7 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       overflow: hidden;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-sm);
     }
 
     table {
@@ -206,23 +232,25 @@
     th {
       text-align: left;
       padding: 12px 16px;
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.05em;
       border-bottom: 1px solid var(--border);
-      background: var(--bg-secondary);
+      background: var(--bg-primary);
       font-weight: 600;
     }
 
     td {
       padding: 12px 16px;
-      font-size: 14px;
-      border-bottom: 1px solid var(--border);
+      font-size: 13.5px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-secondary);
     }
 
-    tr { transition: var(--transition-fast); }
-    tr:hover td { background: var(--accent-glow); }
+    tr:last-child td { border-bottom: none; }
+    tr { transition: var(--transition); }
+    tr:hover td { background: var(--bg-card-hover); }
 
     /* Graph */
     #graph-container {
@@ -232,18 +260,13 @@
       height: 600px;
       position: relative;
       overflow: hidden;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-sm);
     }
 
     #graph-container svg { width: 100%; height: 100%; }
 
-    .graph-node {
-      cursor: pointer;
-      transition: var(--transition-fast);
-    }
-
-    .graph-node:hover { filter: brightness(1.3); }
+    .graph-node { cursor: pointer; transition: var(--transition); }
+    .graph-node:hover { filter: brightness(1.1); }
 
     .graph-label {
       font-size: 10px;
@@ -254,22 +277,25 @@
 
     .graph-link {
       stroke: var(--border);
-      stroke-opacity: 0.6;
+      stroke-opacity: 0.5;
     }
 
     /* Badge */
     .badge {
-      display: inline-block;
-      padding: 2px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 10px;
       border-radius: 9999px;
       font-size: 11px;
       font-weight: 600;
+      letter-spacing: 0.02em;
     }
 
-    .badge-success { background: var(--success-glow); color: var(--success); }
-    .badge-danger { background: var(--danger-glow); color: var(--danger); }
-    .badge-warning { background: var(--warning-glow); color: var(--warning); }
-    .badge-accent { background: var(--accent-glow); color: var(--accent); }
+    .badge-success { background: var(--success-light); color: var(--success); }
+    .badge-danger { background: var(--danger-light); color: var(--danger); }
+    .badge-warning { background: var(--warning-light); color: var(--warning); }
+    .badge-accent { background: var(--accent-light); color: var(--accent); }
 
     /* Empty state */
     .empty-state {
@@ -278,46 +304,49 @@
       color: var(--text-muted);
     }
 
-    .empty-state-icon {
-      font-size: 48px;
+    .empty-state svg {
+      width: 48px;
+      height: 48px;
       margin-bottom: 16px;
+      opacity: 0.5;
     }
 
     /* Pattern/Failure items */
     .list-item {
       padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
-      transition: var(--transition-fast);
+      border-bottom: 1px solid var(--border-light);
+      transition: var(--transition);
     }
 
-    .list-item:hover { background: var(--accent-glow); }
-
+    .list-item:hover { background: var(--bg-card-hover); }
     .list-item:last-child { border-bottom: none; }
+
+    .list-item-title {
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .list-item-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
 
     /* Responsive */
     @media (max-width: 768px) {
       .app { grid-template-columns: 1fr; }
-      .sidebar {
-        display: none;
-        position: fixed;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        z-index: 100;
-        width: 240px;
-      }
-      .sidebar.open { display: flex; }
-      .main { padding: 16px; }
+      .sidebar { display: none; }
+      .main { padding: 16px 20px; }
       .cards { grid-template-columns: repeat(2, 1fr); }
     }
 
-    /* Focus visible for accessibility */
+    /* Focus visible */
     :focus-visible {
       outline: 2px solid var(--accent);
       outline-offset: 2px;
     }
 
-    /* Skip link for accessibility */
+    /* Skip link */
     .skip-link {
       position: absolute;
       top: -40px;
@@ -327,11 +356,17 @@
       padding: 8px 16px;
       z-index: 100;
       transition: var(--transition);
+      text-decoration: none;
+      border-radius: 0 0 8px 0;
     }
 
-    .skip-link:focus {
-      top: 0;
-    }
+    .skip-link:focus { top: 0; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
   </style>
 </head>
 <body>
@@ -340,20 +375,43 @@
   <div class="app">
     <nav class="sidebar" role="navigation" aria-label="Main navigation">
       <div class="sidebar-logo">
-        <span>⚡</span> make-laten
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        make-laten
       </div>
-      <div class="nav-item active" data-page="overview" tabindex="0" role="button" aria-pressed="true">📊 Overview</div>
-      <div class="nav-item" data-page="tokens" tabindex="0" role="button" aria-pressed="false">📈 Tokens</div>
-      <div class="nav-item" data-page="compress" tabindex="0" role="button" aria-pressed="false">🗜️ Compress</div>
-      <div class="nav-item" data-page="learn" tabindex="0" role="button" aria-pressed="false">🧠 Learn</div>
-      <div class="nav-item" data-page="cache" tabindex="0" role="button" aria-pressed="false">📉 Cache</div>
-      <div class="nav-item" data-page="graph" tabindex="0" role="button" aria-pressed="false">🔗 Graph</div>
-      <div class="nav-item" data-page="activity" tabindex="0" role="button" aria-pressed="false">📋 Activity</div>
+      <div class="nav-item active" data-page="overview" tabindex="0" role="button" aria-pressed="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+        Overview
+      </div>
+      <div class="nav-item" data-page="tokens" tabindex="0" role="button" aria-pressed="false">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Tokens
+      </div>
+      <div class="nav-item" data-page="compress" tabindex="0" role="button" aria-pressed="false">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
+        Compress
+      </div>
+      <div class="nav-item" data-page="learn" tabindex="0" role="button" aria-pressed="false">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><path d="m16.2 16.2 2.9 2.9"/><path d="M12 18v4"/><path d="m4.9 19.1 2.9-2.9"/><path d="M2 12h4"/><path d="m4.9 4.9 2.9 2.9"/></svg>
+        Learn
+      </div>
+      <div class="nav-item" data-page="cache" tabindex="0" role="button" aria-pressed="false">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>
+        Cache
+      </div>
+      <div class="nav-item" data-page="graph" tabindex="0" role="button" aria-pressed="false">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+        Graph
+      </div>
+      <div class="nav-item" data-page="activity" tabindex="0" role="button" aria-pressed="false">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Activity
+      </div>
     </nav>
 
     <main class="main" id="main-content">
       <!-- Overview Page -->
       <section id="page-overview" class="page active" aria-label="Overview">
+        <h1 class="page-title">Overview</h1>
         <div class="cards" id="summary-cards"></div>
         <div class="chart-container">
           <div class="chart-title">Token Usage Over Time</div>
@@ -367,6 +425,7 @@
 
       <!-- Tokens Page -->
       <section id="page-tokens" class="page" aria-label="Token usage details">
+        <h1 class="page-title">Token Usage</h1>
         <div class="table-container">
           <table>
             <thead>
@@ -387,6 +446,7 @@
 
       <!-- Compress Page -->
       <section id="page-compress" class="page" aria-label="Compression statistics">
+        <h1 class="page-title">Compression</h1>
         <div class="cards" id="compress-cards"></div>
         <div class="chart-container">
           <div class="chart-title">Compression Ratio by Tool</div>
@@ -396,6 +456,7 @@
 
       <!-- Learn Page -->
       <section id="page-learn" class="page" aria-label="Learned patterns">
+        <h1 class="page-title">Learn</h1>
         <div class="cards" id="learn-cards"></div>
         <div class="chart-container">
           <div class="chart-title">Patterns</div>
@@ -409,16 +470,19 @@
 
       <!-- Cache Page -->
       <section id="page-cache" class="page" aria-label="Cache statistics">
+        <h1 class="page-title">Cache</h1>
         <div class="cards" id="cache-cards"></div>
       </section>
 
       <!-- Graph Page -->
       <section id="page-graph" class="page" aria-label="Code graph visualization">
+        <h1 class="page-title">Code Graph</h1>
         <div id="graph-container"></div>
       </section>
 
       <!-- Activity Page -->
       <section id="page-activity" class="page" aria-label="Activity timeline">
+        <h1 class="page-title">Activity</h1>
         <div class="table-container">
           <table>
             <thead>
@@ -437,6 +501,20 @@
   </div>
 
   <script>
+    // Icons
+    const icons = {
+      file: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>',
+      zap: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+      cache: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>',
+      dollar: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+      compress: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>',
+      brain: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><path d="m16.2 16.2 2.9 2.9"/><path d="M12 18v4"/><path d="m4.9 19.1 2.9-2.9"/><path d="M2 12h4"/><path d="m4.9 4.9 2.9 2.9"/></svg>',
+      alert: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+      check: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+      x: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
+      link: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>'
+    }
+
     // Navigation
     document.querySelectorAll('.nav-item').forEach(item => {
       item.addEventListener('click', () => {
@@ -517,27 +595,27 @@
 
       document.getElementById('summary-cards').innerHTML = `
         <div class="card">
-          <div class="card-label">Total Requests</div>
+          <div class="card-label">${icons.zap} Total Requests</div>
           <div class="card-value accent">${s.totalRequests}</div>
         </div>
         <div class="card">
-          <div class="card-label">Input Tokens</div>
+          <div class="card-label">${icons.file} Input Tokens</div>
           <div class="card-value">${formatTokens(s.totalInputTokens)}</div>
         </div>
         <div class="card">
-          <div class="card-label">Cached Tokens</div>
+          <div class="card-label">${icons.cache} Cached Tokens</div>
           <div class="card-value success">${formatTokens(s.totalCachedTokens)}</div>
         </div>
         <div class="card">
-          <div class="card-label">Output Tokens</div>
+          <div class="card-label">${icons.file} Output Tokens</div>
           <div class="card-value">${formatTokens(s.totalOutputTokens)}</div>
         </div>
         <div class="card">
-          <div class="card-label">Estimated Cost</div>
+          <div class="card-label">${icons.dollar} Estimated Cost</div>
           <div class="card-value warning">${formatCost(s.estimatedCost)}</div>
         </div>
         <div class="card">
-          <div class="card-label">Avg Compression</div>
+          <div class="card-label">${icons.compress} Avg Compression</div>
           <div class="card-value success">${(s.avgCompression * 100).toFixed(0)}%</div>
         </div>
       `
@@ -550,17 +628,17 @@
           data: {
             labels: recent.map((r, i) => i),
             datasets: [
-              { label: 'Input', data: recent.map(r => r.inputTokens), borderColor: '#6366f1', fill: true, backgroundColor: 'rgba(99,102,241,0.1)' },
-              { label: 'Output', data: recent.map(r => r.outputTokens), borderColor: '#22c55e', fill: true, backgroundColor: 'rgba(34,197,94,0.1)' },
-              { label: 'Cached', data: recent.map(r => r.cachedTokens), borderColor: '#eab308', fill: true, backgroundColor: 'rgba(234,179,8,0.1)' }
+              { label: 'Input', data: recent.map(r => r.inputTokens), borderColor: '#6366f1', fill: true, backgroundColor: 'rgba(99,102,241,0.08)', tension: 0.3 },
+              { label: 'Output', data: recent.map(r => r.outputTokens), borderColor: '#22c55e', fill: true, backgroundColor: 'rgba(34,197,94,0.08)', tension: 0.3 },
+              { label: 'Cached', data: recent.map(r => r.cachedTokens), borderColor: '#f59e0b', fill: true, backgroundColor: 'rgba(245,158,11,0.08)', tension: 0.3 }
             ]
           },
           options: {
             responsive: true,
-            plugins: { legend: { labels: { color: '#a1a1aa' } } },
+            plugins: { legend: { labels: { color: '#475569', font: { family: 'Inter' } } } },
             scales: {
               x: { display: false },
-              y: { ticks: { color: '#71717a' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+              y: { ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono' } }, grid: { color: '#f1f5f9' } }
             }
           }
         })
@@ -574,14 +652,14 @@
           type: 'bar',
           data: {
             labels: toolLabels,
-            datasets: [{ label: 'Calls', data: toolValues, backgroundColor: '#6366f1' }]
+            datasets: [{ label: 'Calls', data: toolValues, backgroundColor: '#6366f1', borderRadius: 6 }]
           },
           options: {
             responsive: true,
             plugins: { legend: { display: false } },
             scales: {
-              x: { ticks: { color: '#71717a' }, grid: { display: false } },
-              y: { ticks: { color: '#71717a' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+              x: { ticks: { color: '#94a3b8', font: { family: 'Inter' } }, grid: { display: false } },
+              y: { ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono' } }, grid: { color: '#f1f5f9' } }
             }
           }
         })
@@ -605,16 +683,132 @@
       document.getElementById('tokens-table').innerHTML = rows || '<tr><td colspan="7" class="empty-state">No data yet</td></tr>'
     }
 
+    // Compress page
+    async function renderCompress() {
+      const data = await loadStats()
+      const s = data.summary
+
+      // Group by tool for compression chart
+      const toolData = {}
+      data.requests.forEach(r => {
+        if (!toolData[r.tool]) toolData[r.tool] = []
+        toolData[r.tool].push(r.compressionRatio)
+      })
+
+      const avgByTool = Object.entries(toolData).map(([tool, ratios]) => ({
+        tool,
+        avg: ratios.reduce((a, b) => a + b, 0) / ratios.length
+      }))
+
+      document.getElementById('compress-cards').innerHTML = `
+        <div class="card">
+          <div class="card-label">${icons.compress} Avg Compression</div>
+          <div class="card-value success">${(s.avgCompression * 100).toFixed(0)}%</div>
+        </div>
+        <div class="card">
+          <div class="card-label">${icons.file} Total Savings</div>
+          <div class="card-value">${formatTokens(data.requests.reduce((a, r) => a + r.savings, 0))}</div>
+        </div>
+        <div class="card">
+          <div class="card-label">${icons.zap} Tools Used</div>
+          <div class="card-value">${Object.keys(s.toolUsage).length}</div>
+        </div>
+      `
+
+      if (avgByTool.length > 0) {
+        new Chart(document.getElementById('compress-chart'), {
+          type: 'bar',
+          data: {
+            labels: avgByTool.map(d => d.tool),
+            datasets: [{
+              label: 'Compression %',
+              data: avgByTool.map(d => (d.avg * 100).toFixed(0)),
+              backgroundColor: '#22c55e',
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { ticks: { color: '#94a3b8', font: { family: 'Inter' } }, grid: { display: false } },
+              y: { ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono' } }, grid: { color: '#f1f5f9' }, max: 100 }
+            }
+          }
+        })
+      }
+    }
+
+    // Learn page
+    async function renderLearn() {
+      const [patterns, failures] = await Promise.all([loadPatterns(), loadFailures()])
+
+      document.getElementById('learn-cards').innerHTML = `
+        <div class="card">
+          <div class="card-label">${icons.brain} Patterns</div>
+          <div class="card-value">${patterns.patterns?.length || 0}</div>
+        </div>
+        <div class="card">
+          <div class="card-label">${icons.alert} Failures</div>
+          <div class="card-value danger">${failures.failures?.length || 0}</div>
+        </div>
+      `
+
+      const patternsList = document.getElementById('patterns-list')
+      if (patterns.patterns?.length > 0) {
+        patternsList.innerHTML = patterns.patterns.map(p => `
+          <div class="list-item">
+            <div class="list-item-title">${p.type}</div>
+            <div class="list-item-meta">Confidence: ${(p.confidence * 100).toFixed(0)}% | Count: ${p.count || 1}</div>
+          </div>
+        `).join('')
+      } else {
+        patternsList.innerHTML = '<div class="empty-state">No patterns recorded yet</div>'
+      }
+
+      const failuresList = document.getElementById('failures-list')
+      if (failures.failures?.length > 0) {
+        failuresList.innerHTML = failures.failures.map(f => `
+          <div class="list-item">
+            <div class="list-item-title">${f.type}</div>
+            <div class="list-item-meta">${f.error} | ${f.suggestions?.[0] || 'No suggestions'}</div>
+          </div>
+        `).join('')
+      } else {
+        failuresList.innerHTML = '<div class="empty-state">No failures recorded yet</div>'
+      }
+    }
+
+    // Cache page
+    async function renderCache() {
+      const data = await loadStats()
+      const s = data.summary
+
+      document.getElementById('cache-cards').innerHTML = `
+        <div class="card">
+          <div class="card-label">${icons.cache} Cached Tokens</div>
+          <div class="card-value success">${formatTokens(s.totalCachedTokens)}</div>
+        </div>
+        <div class="card">
+          <div class="card-label">${icons.zap} Cache Rate</div>
+          <div class="card-value">${s.totalRequests > 0 ? ((s.totalCachedTokens / (s.totalInputTokens + s.totalCachedTokens)) * 100).toFixed(0) : 0}%</div>
+        </div>
+        <div class="card">
+          <div class="card-label">${icons.file} Total Input</div>
+          <div class="card-value">${formatTokens(s.totalInputTokens)}</div>
+        </div>
+      `
+    }
+
     // Graph page
     async function renderGraph() {
       const graph = await loadGraph()
       const container = document.getElementById('graph-container')
 
-      // Clear previous graph
       container.innerHTML = ''
 
       if (graph.nodes.length === 0) {
-        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔗</div><div>No graph data yet. Run build-graph to generate.</div></div>'
+        container.innerHTML = `<div class="empty-state">${icons.link}<div>No graph data yet. Run build-graph to generate.</div></div>`
         return
       }
 
@@ -638,8 +832,8 @@
         .attr('class', 'graph-node')
         .attr('r', d => d.type === 'file' ? 8 : 5)
         .attr('fill', d => {
-          const colors = { file: '#6366f1', function: '#22c55e', class: '#eab308', method: '#ef4444', import: '#71717a' }
-          return colors[d.type] || '#71717a'
+          const colors = { file: '#6366f1', function: '#22c55e', class: '#f59e0b', method: '#ef4444', import: '#94a3b8' }
+          return colors[d.type] || '#94a3b8'
         })
         .call(d3.drag()
           .on('start', (event, d) => { if (!event.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y })
@@ -661,10 +855,28 @@
       })
     }
 
+    // Activity page
+    async function renderActivity() {
+      const data = await loadStats()
+      const rows = data.requests.slice().reverse().map(r => `
+        <tr>
+          <td>${formatTime(r.timestamp)}</td>
+          <td><span class="badge badge-accent">${r.tool}</span></td>
+          <td>${r.success ? '<span class="badge badge-success">' + icons.check + ' Success</span>' : '<span class="badge badge-danger">' + icons.x + ' Error</span>'}</td>
+          <td>${formatTokens(r.inputTokens + r.outputTokens)}</td>
+        </tr>
+      `).join('')
+      document.getElementById('activity-table').innerHTML = rows || '<tr><td colspan="4" class="empty-state">No activity yet</td></tr>'
+    }
+
     // Init
     renderOverview()
     renderTokens()
+    renderCompress()
+    renderLearn()
+    renderCache()
     renderGraph()
+    renderActivity()
   </script>
 </body>
 </html>

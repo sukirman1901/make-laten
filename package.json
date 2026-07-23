@@ -1,6 +1,6 @@
 {
   "name": "make-laten",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Universal efficiency toolkit for AI coding agents — compress, cache, route, and optimize token usage",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
