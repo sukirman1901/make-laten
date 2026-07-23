@@ -3,6 +3,7 @@ import { promisify } from 'util'
 import fs from 'fs/promises'
 import path from 'path'
 import readline from 'readline'
+import { CLAUDE_MD, CURSORRULES, AGENTS_MD, GEMINI_MD } from '../templates/index.js'
 
 const execAsync = promisify(exec)
 
@@ -56,6 +57,17 @@ async function writeJSON(filePath: string, data: Record<string, any>): Promise<b
   }
 }
 
+async function writeFile(filePath: string, content: string): Promise<boolean> {
+  try {
+    const dir = path.dirname(filePath)
+    await fs.mkdir(dir, { recursive: true })
+    await fs.writeFile(filePath, content)
+    return true
+  } catch {
+    return false
+  }
+}
+
 const MCP_CMD = ['npx', '-y', 'make-laten-mcp', 'server']
 
 async function detectAllAgents(): Promise<AgentInfo[]> {
@@ -71,7 +83,10 @@ async function detectAllAgents(): Promise<AgentInfo[]> {
     writeConfig: async (p) => {
       const data = await readJSON(p)
       data.mcpServers = { ...(data.mcpServers || {}), 'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] } }
-      return writeJSON(p, data)
+      const mcpSuccess = await writeJSON(p, data)
+      const claudeMdPath = path.join(process.cwd(), 'CLAUDE.md')
+      const claudeSuccess = await writeFile(claudeMdPath, CLAUDE_MD)
+      return mcpSuccess && claudeSuccess
     }
   })
 
@@ -83,7 +98,10 @@ async function detectAllAgents(): Promise<AgentInfo[]> {
     writeConfig: async (p) => {
       const data = await readJSON(p)
       data.mcpServers = { ...(data.mcpServers || {}), 'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] } }
-      return writeJSON(p, data)
+      const mcpSuccess = await writeJSON(p, data)
+      const cursorrulesPath = path.join(process.cwd(), '.cursorrules')
+      const cursorSuccess = await writeFile(cursorrulesPath, CURSORRULES)
+      return mcpSuccess && cursorSuccess
     }
   })
 
@@ -95,7 +113,10 @@ async function detectAllAgents(): Promise<AgentInfo[]> {
     writeConfig: async (p) => {
       const data = await readJSON(p)
       data.mcpServers = { ...(data.mcpServers || {}), 'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] } }
-      return writeJSON(p, data)
+      const mcpSuccess = await writeJSON(p, data)
+      const agentsMdPath = path.join(process.cwd(), 'AGENTS.md')
+      const agentsSuccess = await writeFile(agentsMdPath, AGENTS_MD)
+      return mcpSuccess && agentsSuccess
     }
   })
 
@@ -147,7 +168,10 @@ async function detectAllAgents(): Promise<AgentInfo[]> {
     writeConfig: async (p) => {
       const data = await readJSON(p)
       data.mcpServers = { ...(data.mcpServers || {}), 'make-laten': { command: 'npx', args: ['-y', 'make-laten-mcp', 'server'] } }
-      return writeJSON(p, data)
+      const mcpSuccess = await writeJSON(p, data)
+      const geminiMdPath = path.join(process.cwd(), 'GEMINI.md')
+      const geminiSuccess = await writeFile(geminiMdPath, GEMINI_MD)
+      return mcpSuccess && geminiSuccess
     }
   })
 
@@ -224,8 +248,8 @@ export async function initCommand(options: { all?: boolean; project?: boolean })
   console.log('')
   console.log('  make-laten provides:')
   console.log('    • MCP server → auto-compress for all AI agents')
+  console.log('    • Platform configs → CLAUDE.md, .cursorrules, AGENTS.md, GEMINI.md')
   console.log('    • CLI commands → mread, mgrep, mdiff, msearch, mfetch')
-  console.log('    • Shell aliases → auto-load in new terminals')
   console.log('')
   console.log('  Restart your agent to activate MCP tools.')
   console.log('')
