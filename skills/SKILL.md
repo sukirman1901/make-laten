@@ -107,7 +107,7 @@ read (large)   2077 → 6    100%
 grep            603 → 521   14%
 git-diff       2635 → 991   62%
 git-status       28 → 35   -25%  (passthrough <10 tokens)
-Total:         9200 → 2018   78%
+Total:         11,922 → 1,775   85%
 ```
 
 ## Features

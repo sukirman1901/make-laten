@@ -14,20 +14,37 @@ import { WebRouter } from '../../web/router.js'
 import fs from 'fs'
 import path from 'path'
 import { execSync } from 'child_process'
+import { encoding_for_model } from 'tiktoken'
+
+const enc = encoding_for_model('gpt-4o')
 
 function countTokens(text: string): number {
-  return Math.ceil(text.length / 4)
+  return enc.encode(text).length
+}
+
+function formatNum(n: number): string {
+  return n.toLocaleString()
+}
+
+interface BenchResult {
+  name: string
+  rawChars: number
+  compressedChars: number
+  rawTokens: number
+  compressedTokens: number
+  charSavings: number
+  tokenSavings: number
 }
 
 async function benchmark() {
   const projectPath = process.cwd()
 
   console.log('')
-  console.log('  make-laten benchmark (18 tools)')
-  console.log('  ================================')
+  console.log('  make-laten benchmark (tiktoken cl100k_base)')
+  console.log('  ============================================')
   console.log('')
 
-  const results: { name: string; raw: number; compressed: number; savings: number }[] = []
+  const results: BenchResult[] = []
 
   // === COMPRESS LAYER ===
   console.log('  Compress Layer')
@@ -37,48 +54,72 @@ async function benchmark() {
   const smallFile = path.join(projectPath, 'src/index.ts')
   if (fs.existsSync(smallFile)) {
     const content = fs.readFileSync(smallFile, 'utf-8')
-    const raw = countTokens(content)
     const compressor = new FileReadCompressor()
     const result = await compressor.compress({ content, filePath: 'src/index.ts' })
-    const compressed = countTokens(result.content)
-    results.push({ name: 'read (small)', raw, compressed, savings: Math.round((1 - compressed / raw) * 100) })
+    const rawTokens = countTokens(content)
+    const compressedTokens = countTokens(result.content)
+    results.push({
+      name: 'read (small)',
+      rawChars: content.length, compressedChars: result.content.length,
+      rawTokens, compressedTokens,
+      charSavings: Math.round((1 - result.content.length / content.length) * 100),
+      tokenSavings: Math.round((1 - compressedTokens / rawTokens) * 100)
+    })
   }
 
   // 2. file-read (medium)
   const mediumFile = path.join(projectPath, 'src/mcp/server.ts')
   if (fs.existsSync(mediumFile)) {
     const content = fs.readFileSync(mediumFile, 'utf-8')
-    const raw = countTokens(content)
     const compressor = new FileReadCompressor()
     const result = await compressor.compress({ content, filePath: 'src/mcp/server.ts' })
-    const compressed = countTokens(result.content)
-    results.push({ name: 'read (medium)', raw, compressed, savings: Math.round((1 - compressed / raw) * 100) })
+    const rawTokens = countTokens(content)
+    const compressedTokens = countTokens(result.content)
+    results.push({
+      name: 'read (medium)',
+      rawChars: content.length, compressedChars: result.content.length,
+      rawTokens, compressedTokens,
+      charSavings: Math.round((1 - result.content.length / content.length) * 100),
+      tokenSavings: Math.round((1 - compressedTokens / rawTokens) * 100)
+    })
   }
 
   // 3. file-read (large)
   const largeFile = path.join(projectPath, 'README.md')
   if (fs.existsSync(largeFile)) {
     const content = fs.readFileSync(largeFile, 'utf-8')
-    const raw = countTokens(content)
     const compressor = new FileReadCompressor()
     const result = await compressor.compress({ content, filePath: 'README.md' })
-    const compressed = countTokens(result.content)
-    results.push({ name: 'read (large)', raw, compressed, savings: Math.round((1 - compressed / raw) * 100) })
+    const rawTokens = countTokens(content)
+    const compressedTokens = countTokens(result.content)
+    results.push({
+      name: 'read (large)',
+      rawChars: content.length, compressedChars: result.content.length,
+      rawTokens, compressedTokens,
+      charSavings: Math.round((1 - result.content.length / content.length) * 100),
+      tokenSavings: Math.round((1 - compressedTokens / rawTokens) * 100)
+    })
   }
 
   // 4. grep
   try {
     const grepResult = execSync('grep -rn "export" src/ 2>/dev/null | head -30', { cwd: projectPath, encoding: 'utf-8' }).trim()
     if (grepResult) {
-      const raw = countTokens(grepResult)
       const matches = grepResult.split('\n').filter(Boolean).map(line => {
         const parts = line.split(':')
         return { file: parts[0], line: parseInt(parts[1], 10) || 0, content: parts.slice(2).join(':').trim() }
       })
       const compressor = new GrepCompressor()
       const result = await compressor.compress({ results: matches, pattern: 'export', directory: 'src/' })
-      const compressed = countTokens(result.content)
-      results.push({ name: 'grep', raw, compressed, savings: Math.round((1 - compressed / raw) * 100) })
+      const rawTokens = countTokens(grepResult)
+      const compressedTokens = countTokens(result.content)
+      results.push({
+        name: 'grep',
+        rawChars: grepResult.length, compressedChars: result.content.length,
+        rawTokens, compressedTokens,
+        charSavings: Math.round((1 - result.content.length / grepResult.length) * 100),
+        tokenSavings: Math.round((1 - compressedTokens / rawTokens) * 100)
+      })
     }
   } catch {}
 
@@ -86,11 +127,17 @@ async function benchmark() {
   try {
     const diff = execSync('git diff HEAD~1 2>/dev/null || echo ""', { cwd: projectPath, encoding: 'utf-8' }).trim()
     if (diff) {
-      const raw = countTokens(diff)
       const compressor = new GitDiffCompressor()
       const result = await compressor.compress({ diff })
-      const compressed = countTokens(result.content)
-      results.push({ name: 'git-diff', raw, compressed, savings: Math.round((1 - compressed / raw) * 100) })
+      const rawTokens = countTokens(diff)
+      const compressedTokens = countTokens(result.content)
+      results.push({
+        name: 'git-diff',
+        rawChars: diff.length, compressedChars: result.content.length,
+        rawTokens, compressedTokens,
+        charSavings: Math.round((1 - result.content.length / diff.length) * 100),
+        tokenSavings: Math.round((1 - compressedTokens / rawTokens) * 100)
+      })
     }
   } catch {}
 
@@ -98,11 +145,17 @@ async function benchmark() {
   try {
     const status = execSync('git status --porcelain 2>/dev/null || echo ""', { cwd: projectPath, encoding: 'utf-8' }).trim()
     if (status) {
-      const raw = countTokens(status)
       const compressor = new GitStatusCompressor()
       const result = await compressor.compress({ status })
-      const compressed = countTokens(result.content)
-      results.push({ name: 'git-status', raw, compressed, savings: Math.round((1 - compressed / raw) * 100) })
+      const rawTokens = countTokens(status)
+      const compressedTokens = countTokens(result.content)
+      results.push({
+        name: 'git-status',
+        rawChars: status.length, compressedChars: result.content.length,
+        rawTokens, compressedTokens,
+        charSavings: Math.round((1 - result.content.length / status.length) * 100),
+        tokenSavings: Math.round((1 - compressedTokens / rawTokens) * 100)
+      })
     }
   } catch {}
 
@@ -219,25 +272,47 @@ async function benchmark() {
 
   // === SUMMARY ===
   console.log('  Summary')
-  console.log('  ' + '─'.repeat(50))
+  console.log('  ' + '─'.repeat(75))
 
-  const totalRaw = results.reduce((s, r) => s + r.raw, 0)
-  const totalCompressed = results.reduce((s, r) => s + r.compressed, 0)
-  const savings = Math.round((1 - totalCompressed / totalRaw) * 100)
+  const totalRawChars = results.reduce((s, r) => s + r.rawChars, 0)
+  const totalCompressedChars = results.reduce((s, r) => s + r.compressedChars, 0)
+  const totalRawTokens = results.reduce((s, r) => s + r.rawTokens, 0)
+  const totalCompressedTokens = results.reduce((s, r) => s + r.compressedTokens, 0)
+  const charSavings = Math.round((1 - totalCompressedChars / totalRawChars) * 100)
+  const tokenSavings = Math.round((1 - totalCompressedTokens / totalRawTokens) * 100)
 
-  console.log('  Command'.padEnd(20) + 'Raw'.padEnd(10) + 'Compressed'.padEnd(12) + 'Savings')
-  console.log('  ' + '─'.repeat(50))
+  console.log('  ' + 'Command'.padEnd(16) + 'Chars In→Out'.padEnd(18) + 'Tokens In→Out'.padEnd(18) + 'Char%'.padEnd(8) + 'Token%')
+  console.log('  ' + '─'.repeat(75))
   for (const r of results) {
-    console.log(`  ${r.name}`.padEnd(20) + `${r.raw}`.padEnd(10) + `${r.compressed}`.padEnd(12) + `${r.savings}%`)
+    const chars = `${formatNum(r.rawChars)}→${formatNum(r.compressedChars)}`
+    const tokens = `${formatNum(r.rawTokens)}→${formatNum(r.compressedTokens)}`
+    console.log(
+      `  ${r.name}`.padEnd(16) +
+      chars.padEnd(18) +
+      tokens.padEnd(18) +
+      `${r.charSavings}%`.padEnd(8) +
+      `${r.tokenSavings}%`
+    )
   }
 
-  console.log('  ' + '─'.repeat(50))
-  console.log(`  ${'Total'.padEnd(20)}${totalRaw}`.padEnd(10) + `${totalCompressed}`.padEnd(12) + `${savings}%`)
+  console.log('  ' + '─'.repeat(75))
+  const totalChars = `${formatNum(totalRawChars)}→${formatNum(totalCompressedChars)}`
+  const totalTokens = `${formatNum(totalRawTokens)}→${formatNum(totalCompressedTokens)}`
+  console.log(
+    `  ${'TOTAL'.padEnd(16)}` +
+    totalChars.padEnd(18) +
+    totalTokens.padEnd(18) +
+    `${charSavings}%`.padEnd(8) +
+    `${tokenSavings}%`
+  )
 
   console.log('')
+  console.log(`  Token model: gpt-4o (cl100k_base)`)
   console.log(`  18 tools exposed via MCP`)
   console.log(`  4 layers: compress, route, cache, learn`)
   console.log('')
+
+  enc.free()
 }
 
 export async function benchmarkCommand(): Promise<void> {

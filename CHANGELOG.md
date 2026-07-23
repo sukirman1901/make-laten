@@ -12,6 +12,11 @@
 - Learn layer tests isolated from `~/.make-laten` persistence
 - CLI `benchmark` no longer auto-runs on every command import
 - `FailureLearner.record` type misuse in MCP/benchmark
+- `git-status` compressor: passthrough when grouped format doesn't save space
+
+### Changed
+- Benchmark now uses tiktoken (cl100k_base) for accurate token counting
+- Benchmark savings: 85% tokens (was 78% chars estimate)
 
 ## 1.0.0 (2026-07-22)
 
