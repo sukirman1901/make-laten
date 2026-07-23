@@ -4,6 +4,8 @@ import { FileReadCompressor } from '../compress/file-read.js'
 import { GrepCompressor } from '../compress/grep.js'
 import { GitDiffCompressor } from '../compress/git-diff.js'
 import { GitStatusCompressor } from '../compress/git-status.js'
+import { DetailExpander } from '../compress/detail-expander.js'
+import { SessionIRStore } from '../compress/session-ir-store.js'
 import { ToolRouter } from '../route/tool-router.js'
 import { StrategyRouter } from '../route/strategy-router.js'
 import { PatternMiner } from '../learn/pattern-miner.js'
@@ -15,11 +17,14 @@ import { SemanticTool } from '../tool/semantic-tool.js'
 import { exec } from 'child_process'
 import { promisify } from 'util'
 import fs from 'fs/promises'
+import { statSync } from 'fs'
 
 const execAsync = promisify(exec)
 
 // Singletons
 const sessionCache = new SessionCache()
+const irStore = new SessionIRStore()
+const detailExpander = new DetailExpander({ store: irStore })
 const toolRouter = new ToolRouter()
 const strategyRouter = new StrategyRouter()
 const patternMiner = new PatternMiner()
@@ -36,6 +41,21 @@ const TOOLS = [
       type: 'object',
       properties: {
         file_path: { type: 'string', description: 'Path to file' }
+      },
+      required: ['file_path']
+    }
+  },
+  {
+    name: 'make-laten-read-detail',
+    description: 'Zero-loss file detail by symbol or line range (use after make-laten-read overview)',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        file_path: { type: 'string', description: 'Path to file' },
+        symbol: { type: 'string', description: 'Symbol name or Parent.method' },
+        start: { type: 'number', description: 'Start line (1-based, with end)' },
+        end: { type: 'number', description: 'End line (1-based inclusive)' },
+        export: { type: 'string', description: 'Export/type name' }
       },
       required: ['file_path']
     }
@@ -210,15 +230,89 @@ function detectLanguage(filePath: string): string {
 // Compress handlers
 async function handleRead(params: { file_path: string }) {
   const content = await fs.readFile(params.file_path, 'utf-8')
+  const mtimeMs = statSync(params.file_path).mtimeMs
   const compressor = new FileReadCompressor()
   const result = await compressor.compress({
     content,
     filePath: params.file_path,
-    language: detectLanguage(params.file_path)
+    language: detectLanguage(params.file_path),
+    mtimeMs
+  } as any)
+
+  if (result.metadata.ir) {
+    irStore.set(result.metadata.ir)
+  }
+
+  patternMiner.record({
+    type: 'overview_read',
+    input: { file: params.file_path, irId: result.metadata.irId },
+    output: { savings: result.metadata.savings },
+    success: true
   })
-  patternMiner.record({ type: 'file-read', input: { file: params.file_path }, success: true })
   sessionCache.set(`file:${params.file_path}`, { content: result.content, metadata: result.metadata })
-  return { content: [{ type: 'text', text: JSON.stringify({ compressed: result.content, savings: result.metadata.savings, confidence: result.confidence }) }] }
+  return {
+    content: [{
+      type: 'text',
+      text: JSON.stringify({
+        compressed: result.content,
+        savings: result.metadata.savings,
+        confidence: result.confidence,
+        irId: result.metadata.irId,
+        symbols: result.metadata.symbols
+      })
+    }]
+  }
+}
+
+async function handleReadDetail(params: {
+  file_path: string
+  symbol?: string
+  start?: number
+  end?: number
+  export?: string
+}) {
+  const content = await fs.readFile(params.file_path, 'utf-8')
+  const mtimeMs = statSync(params.file_path).mtimeMs
+
+  let focus: import('../compress/detail-expander.js').DetailFocus | null = null
+  if (params.symbol) focus = { type: 'symbol', name: params.symbol }
+  else if (params.export) focus = { type: 'export', name: params.export }
+  else if (params.start != null && params.end != null) {
+    focus = { type: 'range', start: params.start, end: params.end }
+  }
+
+  if (!focus) {
+    return {
+      content: [{
+        type: 'text',
+        text: JSON.stringify({
+          ok: false,
+          code: 'invalid_focus',
+          message: 'Provide symbol, export, or start+end'
+        })
+      }],
+      isError: true
+    }
+  }
+
+  const result = await detailExpander.expand({
+    content,
+    filePath: params.file_path,
+    mtimeMs,
+    focus
+  })
+
+  patternMiner.record({
+    type: 'detail_expand',
+    input: { file: params.file_path, focus },
+    output: result.ok ? { range: result.range } : { code: result.code },
+    success: result.ok
+  })
+
+  return {
+    content: [{ type: 'text', text: JSON.stringify(result) }],
+    isError: !result.ok
+  }
 }
 
 async function handleGrep(params: { pattern: string; path?: string }) {
@@ -350,6 +444,7 @@ async function handleTools() {
 
 const handlers: Record<string, (params: any) => Promise<any>> = {
   'make-laten-read': handleRead,
+  'make-laten-read-detail': handleReadDetail,
   'make-laten-grep': handleGrep,
   'make-laten-git-diff': handleGitDiff,
   'make-laten-git-status': handleGitStatus,
@@ -407,7 +502,7 @@ async function handleLine(line: string) {
         const result = await handler(params || {})
         sendResponse(request.id, result)
       } catch (error: any) {
-        failureLearner.record({ type: name, error: error.message, success: false })
+        failureLearner.record({ type: name, error: error.message, context: { tool: name } })
         sendError(request.id, -32000, error.message)
       }
     } else {
@@ -433,4 +528,4 @@ process.stdin.on('data', async (chunk: string) => {
   }
 })
 
-process.stderr.write('make-laten MCP server started (17 tools)\n')
+process.stderr.write('make-laten MCP server started (18 tools)\n')

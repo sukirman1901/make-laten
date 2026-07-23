@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- Tiered file read: overview with SymbolIR + zero-loss `make-laten-read-detail` (MCP) and `make-laten read --symbol/--range/--export` (CLI)
+- `SessionIRStore` for session IR pointers
+- Graph helpers `upsertFileIR` / `invalidateFileIR` (`file` ↔ `ir`)
+- Learn events: `overview_read`, `detail_expand`
+
+### Fixed
+- Learn layer tests isolated from `~/.make-laten` persistence
+- CLI `benchmark` no longer auto-runs on every command import
+- `FailureLearner.record` type misuse in MCP/benchmark
+
 ## 1.0.0 (2026-07-22)
 
 ### Features

@@ -19,9 +19,18 @@ program
 
 program
   .command('read')
-  .description('Compressed file read')
+  .description('Compressed file read (overview) or zero-loss detail')
   .argument('<file>', 'File path')
-  .action(readCommand)
+  .option('-s, --symbol <name>', 'Expand symbol (zero-loss detail)')
+  .option('-r, --range <start-end>', 'Expand line range (inclusive, 1-based)')
+  .option('-e, --export <name>', 'Expand export/type by name')
+  .action((file: string, opts: { symbol?: string; range?: string; export?: string }) => {
+    return readCommand(file, {
+      symbol: opts.symbol,
+      range: opts.range,
+      exportName: opts.export
+    })
+  })
 
 program
   .command('grep')

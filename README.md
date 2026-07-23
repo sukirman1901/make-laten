@@ -88,13 +88,14 @@ This gives you short aliases:
 
 ## MCP Server (17 Tools)
 
-make-laten includes an MCP server with **17 tools** across 6 layers.
+make-laten includes an MCP server with **18 tools** across 6 layers.
 
 ### Compress Layer
 
 | Tool | Description |
 |------|-------------|
-| `make-laten-read` | Compressed file read (65-100% savings) |
+| `make-laten-read` | Compressed file overview (65-100% savings) + SymbolIR |
+| `make-laten-read-detail` | Zero-loss detail by symbol or line range |
 | `make-laten-grep` | Grouped grep results |
 | `make-laten-git-diff` | Condensed git diff with stat summary |
 | `make-laten-git-status` | Grouped git status |
@@ -159,7 +160,9 @@ make-laten includes an MCP server with **17 tools** across 6 layers.
 
 ```bash
 # File operations
-make-laten read src/index.ts         # 91% savings
+make-laten read src/index.ts                 # overview
+make-laten read src/index.ts --symbol main   # zero-loss detail
+make-laten read src/index.ts --range 10-40   # zero-loss lines
 make-laten grep "TODO" src/          # grouped by file
 make-laten grep "export" . --ignore ts
 
@@ -263,7 +266,7 @@ const page = await web.fetch('https://example.com/docs')
 └─────────────────┬────────────────────┬──────────────────┘
                   │                    │
 ┌─────────────────▼────────────────────▼──────────────────┐
-│              make-laten MCP Server (17 tools)            │
+│              make-laten MCP Server (18 tools)            │
 │                                                         │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────┐ │
 │  │ Compress │  │  Route   │  │  Cache   │  │ Learn  │ │
@@ -306,7 +309,7 @@ const page = await web.fetch('https://example.com/docs')
 | `error` | Error handler with suggestions |
 | `metrics` | Counters, gauges, histograms |
 | `session` | Session manager with timeout |
-| `mcp` | MCP server with 17 tools |
+| `mcp` | MCP server with 18 tools |
 
 ## Data Persistence
 

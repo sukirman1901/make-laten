@@ -23,7 +23,7 @@ async function benchmark() {
   const projectPath = process.cwd()
 
   console.log('')
-  console.log('  make-laten benchmark (17 tools)')
+  console.log('  make-laten benchmark (18 tools)')
   console.log('  ================================')
   console.log('')
 
@@ -168,8 +168,8 @@ async function benchmark() {
   miner.record({ type: 'git-diff', input: {}, success: true })
 
   const learner = new FailureLearner()
-  learner.record({ type: 'file-read', error: 'File not found', success: false })
-  learner.record({ type: 'grep', error: 'Permission denied', success: false })
+  learner.record({ type: 'file-read', error: 'File not found' })
+  learner.record({ type: 'grep', error: 'Permission denied' })
 
   const patterns = miner.getPatterns()
   const failures = learner.getFailures()
@@ -235,9 +235,11 @@ async function benchmark() {
   console.log(`  ${'Total'.padEnd(20)}${totalRaw}`.padEnd(10) + `${totalCompressed}`.padEnd(12) + `${savings}%`)
 
   console.log('')
-  console.log(`  17 tools exposed via MCP`)
+  console.log(`  18 tools exposed via MCP`)
   console.log(`  4 layers: compress, route, cache, learn`)
   console.log('')
 }
 
-benchmark()
+export async function benchmarkCommand(): Promise<void> {
+  await benchmark()
+}

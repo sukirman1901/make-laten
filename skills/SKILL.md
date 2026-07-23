@@ -1,6 +1,6 @@
 ---
 name: make-laten
-description: Universal efficiency toolkit for AI coding agents — 17 MCP tools, CLI commands, 65-100% token savings. Use for file reads, grep, git, web, routing, learning, corrections.
+description: Universal efficiency toolkit for AI coding agents — 18 MCP tools, CLI commands, 65-100% token savings. Use for file reads, detail expand, grep, git, web, routing, learning, corrections.
 ---
 
 # make-laten Skill
@@ -10,18 +10,20 @@ Universal efficiency toolkit that compresses outputs to save tokens. Use CLI com
 ## When to Use
 
 **ALWAYS use make-laten instead of raw tools when:**
-- Reading files → `make-laten read <file>` or `make-laten-read` MCP tool (65-100% savings)
+- Reading files (overview) → `make-laten read <file>` or `make-laten-read` MCP tool (65-100% savings)
+- Audit/detail file body → `make-laten read --symbol` or `make-laten-read-detail` (zero-loss)
 - Searching code → `make-laten grep <pattern>` or `make-laten-grep` MCP tool (grouped by file)
 - Git operations → `make-laten git diff/status` or MCP equivalents
 - Web search → `make-laten search <query>` or `make-laten-search` MCP tool
 - Web fetch → `make-laten fetch <url>` or `make-laten-fetch` MCP tool (75% savings)
 
-## MCP Tools (17 total)
+## MCP Tools (18 total)
 
 ### Compress Layer
 | Tool | Description |
 |------|-------------|
-| `make-laten-read` | Compressed file read (65-100% savings) |
+| `make-laten-read` | Compressed file overview (65-100% savings) + SymbolIR |
+| `make-laten-read-detail` | Zero-loss detail by symbol or line range |
 | `make-laten-grep` | Grouped grep results |
 | `make-laten-git-diff` | Condensed git diff with stat summary |
 | `make-laten-git-status` | Grouped git status |
@@ -67,7 +69,9 @@ Universal efficiency toolkit that compresses outputs to save tokens. Use CLI com
 
 ### File Read (65-100% savings)
 ```bash
-make-laten read <file-path>
+make-laten read <file-path>              # overview
+make-laten read <file-path> --symbol X   # zero-loss detail
+make-laten read <file-path> --range a-b  # zero-loss lines
 ```
 
 ### Grep (grouped by file)
@@ -121,7 +125,8 @@ Replace native tools with make-laten equivalents:
 
 | Instead of | Use |
 |-----------|-----|
-| `Read` tool | `make-laten read <file>` or `make-laten-read` |
+| `Read` tool (overview) | `make-laten read <file>` or `make-laten-read` |
+| Audit/detail body | `make-laten-read-detail` or `make-laten read --symbol` |
 | `Grep` tool | `make-laten grep "<pattern>"` or `make-laten-grep` |
 | `Bash` with `git diff` | `make-laten git diff` or `make-laten-git-diff` |
 | `Bash` with `git status` | `make-laten git status` or `make-laten-git-status` |
