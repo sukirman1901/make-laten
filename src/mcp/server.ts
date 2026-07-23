@@ -526,8 +526,30 @@ async function handleTools() {
   return { content: [{ type: 'text', text: JSON.stringify({ tools, total: tools.length }) }] }
 }
 
+// Code Intel — auto-build graph if empty
+async function ensureGraph(dirPath?: string): Promise<void> {
+  if (currentGraph.nodes.length > 0) return
+  const dir = dirPath || '.'
+  // Try loading from disk first
+  const storagePath = require('path').join(dir, '.make-laten', 'graph.json')
+  try {
+    const exists = await graphStorage.exists(storagePath)
+    if (exists) {
+      currentGraph = await graphStorage.load(storagePath)
+      if (currentGraph.nodes.length > 0) return
+    }
+  } catch {}
+  // Build fresh
+  currentGraph = await incrementalBuilder.buildDirectory(dir)
+  try {
+    await require('fs/promises').mkdir(require('path').dirname(storagePath), { recursive: true })
+    await graphStorage.save(currentGraph, storagePath)
+  } catch {}
+}
+
 // Code Intel handlers (wired to actual components)
 async function handleQuery(params: { type: string; symbol?: string; source?: string; target?: string; query?: string }) {
+  await ensureGraph()
   const { type, symbol, source, target, query } = params
   switch (type) {
     case 'explain': {
@@ -552,21 +574,25 @@ async function handleQuery(params: { type: string; symbol?: string; source?: str
 }
 
 async function handleExplain(params: { symbol: string }) {
+  await ensureGraph()
   const result = await queryEngine.explain(params.symbol, currentGraph)
   return { content: [{ type: 'text', text: JSON.stringify(result || { error: `Symbol '${params.symbol}' not found` }) }] }
 }
 
 async function handlePath(params: { source: string; target: string }) {
+  await ensureGraph()
   const result = await queryEngine.path(params.source, params.target, currentGraph)
   return { content: [{ type: 'text', text: JSON.stringify(result || { error: `No path from '${params.source}' to '${params.target}'` }) }] }
 }
 
 async function handleImpact(params: { symbol: string }) {
+  await ensureGraph()
   const result = await impactAnalyzer.analyze(params.symbol, currentGraph)
   return { content: [{ type: 'text', text: JSON.stringify(result) }] }
 }
 
 async function handleCodeSearch(params: { query: string }) {
+  await ensureGraph()
   const results = await queryEngine.search(params.query, currentGraph)
   return { content: [{ type: 'text', text: JSON.stringify({ results, total: results.length }) }] }
 }
