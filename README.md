@@ -188,6 +188,39 @@ make-laten install                   # install shell aliases
 make-laten install --status          # show what's installed
 ```
 
+## Code Intelligence
+
+make-laten now includes full code intelligence:
+
+- **Query**: Ask about code without reading files
+- **Explain**: Get symbol details and connections
+- **Path**: Find shortest path between symbols
+- **Impact**: Analyze what breaks when code changes
+- **Search**: Find symbols across codebase
+
+### Usage
+
+```bash
+# Build graph for current directory
+npx make-laten build-graph
+
+# Query the graph
+npx make-laten query --type explain --symbol login
+npx make-laten query --type path --source UserService --target Database
+npx make-laten query --type impact --symbol AuthService
+```
+
+### MCP Tools
+
+| Tool | Description |
+|------|-------------|
+| `build-graph` | Build/update code graph for directory |
+| `query` | Unified query interface (explain/path/search/impact) |
+| `explain` | Explain a symbol — its purpose, connections, location |
+| `path` | Find shortest path between two symbols |
+| `impact` | Analyze what breaks if symbol changes |
+| `code-search` | Search symbols in code graph |
+
 ## Supported Agents
 
 make-laten works with **9+ AI coding agents**:
