@@ -214,6 +214,79 @@ const TOOLS = [
     name: 'tools',
     description: 'List all make-laten tools — check what\'s available',
     inputSchema: { type: 'object', properties: {} }
+  },
+
+  // Code Intel Layer
+  {
+    name: 'query',
+    description: 'Query the code graph — find, explain, path, impact',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        type: { type: 'string', enum: ['explain', 'path', 'search', 'impact'], description: 'Query type' },
+        symbol: { type: 'string', description: 'Symbol name (for explain/impact)' },
+        source: { type: 'string', description: 'Source symbol (for path)' },
+        target: { type: 'string', description: 'Target symbol (for path)' },
+        query: { type: 'string', description: 'Search query (for search)' }
+      },
+      required: ['type']
+    }
+  },
+  {
+    name: 'explain',
+    description: 'Explain a symbol — its purpose, connections, location',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        symbol: { type: 'string', description: 'Symbol name to explain' }
+      },
+      required: ['symbol']
+    }
+  },
+  {
+    name: 'path',
+    description: 'Find shortest path between two symbols',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        source: { type: 'string', description: 'Source symbol' },
+        target: { type: 'string', description: 'Target symbol' }
+      },
+      required: ['source', 'target']
+    }
+  },
+  {
+    name: 'impact',
+    description: 'Analyze impact — what breaks if symbol changes',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        symbol: { type: 'string', description: 'Symbol to analyze' }
+      },
+      required: ['symbol']
+    }
+  },
+  {
+    name: 'code-search',
+    description: 'Search symbols in code graph',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Search query' }
+      },
+      required: ['query']
+    }
+  },
+  {
+    name: 'build-graph',
+    description: 'Build or update code graph for directory',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        path: { type: 'string', description: 'Directory path', default: '.' },
+        update: { type: 'boolean', description: 'Update existing graph', default: false }
+      }
+    }
   }
 ]
 
@@ -442,6 +515,31 @@ async function handleTools() {
   return { content: [{ type: 'text', text: JSON.stringify({ tools, total: tools.length }) }] }
 }
 
+// Code Intel handlers (placeholder — wired in Task 9)
+async function handleQuery(params: { type: string; symbol?: string; source?: string; target?: string; query?: string }) {
+  return { content: [{ type: 'text', text: JSON.stringify({ error: 'Query engine not yet connected' }) }] }
+}
+
+async function handleExplain(params: { symbol: string }) {
+  return { content: [{ type: 'text', text: JSON.stringify({ error: 'Explain not yet connected' }) }] }
+}
+
+async function handlePath(params: { source: string; target: string }) {
+  return { content: [{ type: 'text', text: JSON.stringify({ error: 'Path not yet connected' }) }] }
+}
+
+async function handleImpact(params: { symbol: string }) {
+  return { content: [{ type: 'text', text: JSON.stringify({ error: 'Impact not yet connected' }) }] }
+}
+
+async function handleCodeSearch(params: { query: string }) {
+  return { content: [{ type: 'text', text: JSON.stringify({ error: 'Search not yet connected' }) }] }
+}
+
+async function handleBuildGraph(params: { path?: string; update?: boolean }) {
+  return { content: [{ type: 'text', text: JSON.stringify({ error: 'Build graph not yet connected' }) }] }
+}
+
 const handlers: Record<string, (params: any) => Promise<any>> = {
   'read': handleRead,
   'read-detail': handleReadDetail,
@@ -460,7 +558,14 @@ const handlers: Record<string, (params: any) => Promise<any>> = {
   'correct': handleCorrect,
   'search': handleSearch,
   'fetch': handleFetch,
-  'tools': handleTools
+  'tools': handleTools,
+  // Code Intel handlers
+  'query': handleQuery,
+  'explain': handleExplain,
+  'path': handlePath,
+  'impact': handleImpact,
+  'code-search': handleCodeSearch,
+  'build-graph': handleBuildGraph
 }
 
 let requestId = 0
@@ -528,4 +633,4 @@ process.stdin.on('data', async (chunk: string) => {
   }
 })
 
-process.stderr.write('make-laten MCP server started (18 tools)\n')
+process.stderr.write('make-laten MCP server started (24 tools)\n')
