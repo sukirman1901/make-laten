@@ -61,7 +61,10 @@
   "dependencies": {
     "better-sqlite3": "^13.0.1",
     "commander": "^15.0.0",
-    "tiktoken": "^1.0.22"
+    "tiktoken": "^1.0.22",
+    "tree-sitter": "^0.25.0",
+    "tree-sitter-wasms": "^0.1.13",
+    "web-tree-sitter": "^0.26.11"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",

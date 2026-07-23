@@ -1,0 +1,5 @@
+export { ASTBuilder } from './ast-builder.js'
+export { GraphBuilder } from './graph-builder.js'
+export { QueryEngine } from './query-engine.js'
+export { ImpactAnalyzer } from './impact-analyzer.js'
+export { IncrementalBuilder } from './incremental.js'
