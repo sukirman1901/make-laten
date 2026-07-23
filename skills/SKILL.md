@@ -7,15 +7,55 @@ description: Universal efficiency toolkit for AI coding agents — 18 MCP tools,
 
 Universal efficiency toolkit that compresses outputs to save tokens. Use CLI commands or MCP tools for all file/code/git/web operations.
 
-## When to Use
+## Trigger Rules (ALWAYS intercept)
 
-**ALWAYS use make-laten instead of raw tools when:**
-- Reading files (overview) → `make-laten read <file>` or `make-laten-read` MCP tool (65-100% savings)
-- Audit/detail file body → `make-laten read --symbol` or `make-laten-read-detail` (zero-loss)
-- Searching code → `make-laten grep <pattern>` or `make-laten-grep` MCP tool (grouped by file)
-- Git operations → `make-laten git diff/status` or MCP equivalents
-- Web search → `make-laten search <query>` or `make-laten-search` MCP tool
-- Web fetch → `make-laten fetch <url>` or `make-laten-fetch` MCP tool (75% savings)
+### File Operations
+| User Says | Agent Does |
+|-----------|------------|
+| "read file", "open file", "check file" | → make-laten-read (not Read tool) |
+| "read detail", "show body", "expand" | → make-laten-read-detail |
+
+### Code Search
+| User Says | Agent Does |
+|-----------|------------|
+| "grep", "search code", "find in files" | → make-laten-grep (not grep/rg) |
+
+### Git Operations
+| User Says | Agent Does |
+|-----------|------------|
+| "git diff", "show changes" | → make-laten-git-diff |
+| "git status", "what changed" | → make-laten-git-status |
+
+### Web Operations
+| User Says | Agent Does |
+|-----------|------------|
+| "fetch page", "get URL" | → make-laten-fetch |
+| "web search", "search online" | → make-laten-search |
+
+### Text Correction
+| User Says | Agent Does |
+|-----------|------------|
+| "fix typos", "correct text" | → make-laten-correct |
+
+### Learning (Auto)
+| When | Agent Does |
+|------|------------|
+| After successful operation | → learn pattern (auto) |
+| After failed operation | → learn failure (auto) |
+| Before similar operation | → check suggestions (auto) |
+
+### Cache (Auto)
+| When | Agent Does |
+|------|------------|
+| Repeated file read | → check cache first (auto) |
+| After compress | → cache result (auto) |
+| Cache hit | → return cached (auto) |
+
+## Anti-Patterns (NEVER do this)
+- Do NOT use Read tool for files > 100 lines
+- Do NOT use raw grep for code search
+- Do NOT fetch URLs without compression
+- Do NOT ignore cache hits
 
 ## MCP Tools (18 total)
 
